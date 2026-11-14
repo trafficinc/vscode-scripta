@@ -1,0 +1,35 @@
+#!/usr/bin/env scr
+<?scr
+// Scripta uses literal strings: $name is not interpolated.
+# Both line comment styles are supported.
+/* Block comments may contain "quotes", <?scr, and ?>. */
+function greet($name: string): string {
+    return "Hello, " . $name . "!\n";
+}
+$names = ["Ada", 'Grace', "世界"];
+foreach ($names as $index => $name) {
+    echo str($index) . ": " . greet($name);
+}
+for ($i = 0; $i < len($names); $i += 1) {
+    if ($i === 0 && $names[$i] !== "") {
+        echo "First: " . $names[$i] . "\n";
+    } elseif ($i > 0) {
+        continue;
+    } else {
+        break;
+    }
+}
+$literal = "Literal $name; escaped dollar: \$; quotes: \"; slash: \\";
+$single = 'Single quotes: \' and backslash: \\';
+$multiline = "First line
+Second line";
+$values = ["active" => true, "missing" => null, "ratio" => 1.25e-3];
+try {
+    $decoded = Json::decode("{\"ok\":true}");
+    echo str($decoded["ok"]) . "\n";
+} catch ($error) {
+    echo "Could not decode JSON\n";
+} finally {
+    echo "Done\n";
+}
+?>

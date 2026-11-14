@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-labelledby="title desc">
+  <title id="title">Scripta — VS Code Language Support</title>
+  <desc id="desc">A dark navy banner with a mint Scripta symbol, language support features, and a syntax-highlighted Scripta code editor.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#101e35"/>
+      <stop offset="1" stop-color="#080f1d"/>
+    </linearGradient>
+    <linearGradient id="accent" x2="1" y2="1">
+      <stop stop-color="#86f5cd"/>
+      <stop offset="1" stop-color="#43b9d5"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#91b8dd" stroke-opacity=".05"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="440" rx="24" fill="url(#background)"/>
+  <rect width="1280" height="440" rx="24" fill="url(#grid)"/>
+  <path d="M0 416H1280" stroke="#60d9c2" stroke-opacity=".12"/>
+  <circle cx="1190" cy="30" r="230" fill="#49bdd6" fill-opacity=".035"/>
+  <g transform="translate(64 58)">
+    <rect width="54" height="54" rx="15" fill="url(#accent)"/>
+    <path d="m21 16-10 11 10 11m12-22 10 11-10 11" fill="none" stroke="#10273a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="72" y="33" fill="#9bb1c9" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="3">THE SCRIPTA TOOLKIT</text>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="60" y="202" fill="#f1f7ff" font-size="80" font-weight="700" letter-spacing="-3">Scripta<tspan fill="#78e9ca">.</tspan></text>
+    <text x="64" y="249" fill="#c7d7eb" font-size="28">VS Code Language Support</text>
+    <text x="64" y="290" fill="#8fa6c1" font-size="17">A clearer view of every script.</text>
+    <g font-size="13" font-weight="700" fill="#9cebd8">
+      <rect x="64" y="330" width="169" height="34" rx="17" fill="#71e6c4" fill-opacity=".08" stroke="#71e6c4" stroke-opacity=".22"/>
+      <text x="148.5" y="352" text-anchor="middle">Syntax highlighting</text>
+      <rect x="243" y="330" width="96" height="34" rx="17" fill="#71e6c4" fill-opacity=".08" stroke="#71e6c4" stroke-opacity=".22"/>
+      <text x="291" y="352" text-anchor="middle">Snippets</text>
+      <rect x="349" y="330" width="122" height="34" rx="17" fill="#71e6c4" fill-opacity=".08" stroke="#71e6c4" stroke-opacity=".22"/>
+      <text x="410" y="352" text-anchor="middle">Run + check</text>
+    </g>
+  </g>
+  <g transform="translate(630 64)">
+    <rect x="0" y="10" width="586" height="312" rx="14" fill="#000" fill-opacity=".2"/>
+    <rect width="586" height="312" rx="14" fill="#101b2c" stroke="#2b3e55"/>
+    <path d="M14 0H572Q586 0 586 14V48H0V14Q0 0 14 0" fill="#19273b"/>
+    <circle cx="23" cy="24" r="4" fill="#ec8c93"/>
+    <circle cx="39" cy="24" r="4" fill="#e7bf7e"/>
+    <circle cx="55" cy="24" r="4" fill="#7bd8b4"/>
+    <text x="83" y="29" fill="#bfcee0" font-family="Arial, Helvetica, sans-serif" font-size="13">hello.scr</text>
+    <path d="m550 18 10 6-10 6Z" fill="#80e5c3"/>
+    <g font-family="Consolas, 'Liberation Mono', Menlo, monospace" font-size="17">
+      <g fill="#4d627c" text-anchor="end">
+        <text x="38" y="88">1</text><text x="38" y="119">2</text>
+        <text x="38" y="150">3</text><text x="38" y="181">4</text>
+        <text x="38" y="212">5</text><text x="38" y="243">6</text>
+      </g>
+      <g fill="#d6e4f4">
+        <text x="62" y="88" fill="#78e9ca">&lt;?scr</text>
+        <text x="62" y="119"><tspan fill="#b6a4ef">function</tspan> <tspan fill="#88cef0">greet</tspan>($name: <tspan fill="#e7bf7e">string</tspan>) {</text>
+        <text x="62" y="150" xml:space="preserve">  <tspan fill="#b6a4ef">return</tspan> <tspan fill="#a6d99a">"Hello, "</tspan> . $name;</text>
+        <text x="62" y="181">}</text>
+        <text x="62" y="243"><tspan fill="#b6a4ef">echo</tspan> <tspan fill="#88cef0">greet</tspan>(<tspan fill="#a6d99a">"Scripta"</tspan>);</text>
+      </g>
+    </g>
+    <path d="M0 273H586" stroke="#27394e"/>
+    <circle cx="23" cy="293" r="4" fill="#80e5c3"/>
+    <text x="36" y="298" fill="#8fa6c1" font-family="Arial, Helvetica, sans-serif" font-size="12">Scripta</text>
+    <text x="563" y="298" fill="#8fa6c1" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end">.scr</text>
+  </g>
+</svg>

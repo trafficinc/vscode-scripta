@@ -1,0 +1,111 @@
+{
+  "Script": {
+    "prefix": "scr",
+    "description": "New Scripta script",
+    "body": [
+      "<?scr",
+      "$0"
+    ]
+  },
+  "Executable script": {
+    "prefix": "scrmain",
+    "description": "Scripta script with a Unix shebang",
+    "body": [
+      "#!/usr/bin/env scr",
+      "<?scr",
+      "$0"
+    ]
+  },
+  "Function": {
+    "prefix": "fn",
+    "description": "Named function with a return annotation",
+    "body": [
+      "function ${1:name}(${2}): ${3:string} {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "If": {
+    "prefix": "if",
+    "description": "Conditional block",
+    "body": [
+      "if (${1:true}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "If else": {
+    "prefix": "ifelse",
+    "description": "Conditional with an else branch",
+    "body": [
+      "if (${1:true}) {",
+      "\t$2",
+      "} else {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "Foreach": {
+    "prefix": "foreach",
+    "description": "Iterate over values",
+    "body": [
+      "foreach (\\$${1:items} as \\$${2:item}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "Foreach key value": {
+    "prefix": "foreachkv",
+    "description": "Iterate over keys and values",
+    "body": [
+      "foreach (\\$${1:items} as \\$${2:key} => \\$${3:value}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "For": {
+    "prefix": "for",
+    "description": "Counted loop using supported assignment operators",
+    "body": [
+      "for (\\$${1:i} = 0; \\$${1:i} < ${2:10}; \\$${1:i} += 1) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "While": {
+    "prefix": "while",
+    "description": "While loop",
+    "body": [
+      "while (${1:true}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "Try catch": {
+    "prefix": "try",
+    "description": "Catch an exception",
+    "body": [
+      "try {",
+      "\t$1",
+      "} catch (\\$${2:error}) {",
+      "\t$0",
+      "}"
+    ]
+  },
+  "Echo": {
+    "prefix": "echo",
+    "description": "Print a string and a newline",
+    "body": [
+      "echo \"${1:text}\\\\n\";",
+      "$0"
+    ]
+  },
+  "Require once": {
+    "prefix": "require",
+    "description": "Load a local script once",
+    "body": [
+      "require_once \"${1:lib/helpers.scr}\";",
+      "$0"
+    ]
+  }
+}

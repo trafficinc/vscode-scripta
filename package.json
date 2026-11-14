@@ -1,0 +1,161 @@
+{
+  "name": "scripta-language-support",
+  "displayName": "Scripta Language Support",
+  "description": "Scripta language support with syntax highlighting, snippets, run commands, and syntax diagnostics.",
+  "version": "0.2.0",
+  "publisher": "trafficinc",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "scripta",
+    "scr",
+    "syntax",
+    "highlighting"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trafficinc/scripta-vscode.git"
+  },
+  "scripts": {
+    "test": "node --test",
+    "package": "vsce package --out dist/"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "scripta",
+        "aliases": [
+          "Scripta",
+          "scripta"
+        ],
+        "extensions": [
+          ".scr"
+        ],
+        "firstLine": "^\\uFEFF?(?:#!\\s*(?:/\\S*/)?scr(?:\\s|$)|#!\\s*/\\S*/env\\s+(?:-S\\s+)?scr(?:\\s|$)|\\s*<\\?scr(?![A-Za-z0-9_]))",
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "scripta",
+        "scopeName": "source.scripta",
+        "path": "./syntaxes/scripta.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "scripta",
+        "path": "./snippets/scripta.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "scripta.runFile",
+        "title": "Run Scripta File",
+        "category": "Scripta",
+        "icon": "$(play)",
+        "enablement": "editorLangId == scripta && isWorkspaceTrusted"
+      },
+      {
+        "command": "scripta.checkFile",
+        "title": "Check Scripta File",
+        "category": "Scripta",
+        "icon": "$(check)",
+        "enablement": "editorLangId == scripta && isWorkspaceTrusted"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "scripta.runFile",
+          "when": "resourceLangId == scripta && isWorkspaceTrusted",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "scripta.runFile",
+          "when": "resourceLangId == scripta && isWorkspaceTrusted",
+          "group": "scripta"
+        },
+        {
+          "command": "scripta.checkFile",
+          "when": "resourceLangId == scripta && isWorkspaceTrusted",
+          "group": "scripta"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Scripta",
+      "properties": {
+        "scripta.executablePath": {
+          "type": "string",
+          "default": "scr",
+          "scope": "machine-overridable",
+          "description": "Scripta executable name on PATH or a full path. Do not include arguments."
+        },
+        "scripta.runArguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "scope": "resource",
+          "description": "Arguments passed to the script by Run Scripta File. Each item is one literal argument."
+        },
+        "scripta.checkOnSave": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Run scr check after saving a Scripta file. Requires a trusted workspace and the scr executable."
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "scripta",
+        "required": [
+          "file"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Scripta script path."
+          }
+        }
+      }
+    ]
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0",
+    "vscode-textmate": "^9.0.0",
+    "vscode-oniguruma": "^2.0.0"
+  },
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onLanguage:scripta"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Syntax highlighting and snippets work; running and checking scripts require a trusted workspace.",
+      "restrictedConfigurations": [
+        "scripta.executablePath",
+        "scripta.runArguments"
+      ]
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "Running and checking Scripta requires files on disk."
+    }
+  }
+}

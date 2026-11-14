@@ -1,0 +1,226 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Scripta",
+  "scopeName": "source.scripta",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#tags"
+    },
+    {
+      "include": "#variables"
+    },
+    {
+      "include": "#declarations"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#calls"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.shebang.scripta",
+          "match": "\\A\\x{FEFF}?#!.*$"
+        },
+        {
+          "name": "comment.line.double-slash.scripta",
+          "begin": "//",
+          "end": "$"
+        },
+        {
+          "name": "comment.line.number-sign.scripta",
+          "begin": "#",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.scripta",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.scripta",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.scripta",
+              "match": "\\\\[nrt0\\\\'\"$]"
+            },
+            {
+              "name": "invalid.illegal.escape.scripta",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.scripta",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.scripta",
+              "match": "\\\\[\\\\']"
+            },
+            {
+              "name": "invalid.illegal.escape.scripta",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "tags": {
+      "patterns": [
+        {
+          "name": "punctuation.section.embedded.begin.scripta",
+          "match": "<\\?scr(?![A-Za-z0-9_])"
+        },
+        {
+          "name": "punctuation.section.embedded.end.scripta",
+          "match": "\\?>"
+        }
+      ]
+    },
+    "variables": {
+      "name": "variable.other.scripta",
+      "match": "\\$[A-Za-z_][A-Za-z0-9_]*"
+    },
+    "declarations": {
+      "match": "\\b(function)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.function.scripta"
+        },
+        "2": {
+          "name": "entity.name.function.scripta"
+        }
+      }
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.scripta",
+          "match": "\\b(?:if|elseif|else|while|for|foreach|as|return|break|continue|try|catch|finally|throw|exit|require_once|require)\\b"
+        },
+        {
+          "name": "storage.type.function.scripta",
+          "match": "\\bfunction\\b"
+        },
+        {
+          "name": "support.function.output.scripta",
+          "match": "\\becho\\b"
+        },
+        {
+          "name": "constant.language.scripta",
+          "match": "\\b(?:true|false|null)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.scripta",
+      "match": "(?<![\\w$])\\b[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b(?![A-Za-z_])"
+    },
+    "calls": {
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(\\s*)(::)(\\s*)([A-Za-z_][A-Za-z0-9_]*)(?=\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "entity.name.namespace.scripta"
+            },
+            "3": {
+              "name": "punctuation.accessor.scripta"
+            },
+            "5": {
+              "name": "support.function.scripta"
+            }
+          }
+        },
+        {
+          "match": "(->)\\s*([A-Za-z_][A-Za-z0-9_]*)(?=\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.scripta"
+            },
+            "2": {
+              "name": "entity.name.function.scripta"
+            }
+          }
+        },
+        {
+          "match": "(->)\\s*([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.scripta"
+            },
+            "2": {
+              "name": "variable.other.property.scripta"
+            }
+          }
+        },
+        {
+          "name": "support.function.builtin.scripta",
+          "match": "\\b(?:str|int|float|bool|type|len|sleep)(?=\\s*\\()"
+        },
+        {
+          "name": "entity.name.function.scripta",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+        }
+      ]
+    },
+    "types": {
+      "name": "storage.type.scripta",
+      "match": "\\b(?:any|bool|int|float|string|bytes|list|map|callable)\\b"
+    },
+    "operators": {
+      "name": "keyword.operator.scripta",
+      "match": "\\.\\.\\.|===|!==|[+*/.\\-]=|<=|>=|&&|\\|\\||=>|::|->|[+*/%.=<>!\\-]"
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.section.braces.scripta",
+          "match": "[{}]"
+        },
+        {
+          "name": "punctuation.section.brackets.scripta",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.section.parens.scripta",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.separator.scripta",
+          "match": "[;,:]"
+        }
+      ]
+    }
+  }
+}
