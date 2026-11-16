@@ -14,6 +14,10 @@ auto-closing quotes and brackets, indentation, and region folding. Strings stay
 literal: `$name` inside a string is not interpolation. Double-quoted and
 single-quoted strings have different supported escapes, matching Scripta.
 
+When Code Spell Checker is installed, the extension includes `scripta` in its
+default accepted words. If you configure `cSpell.words` yourself, include
+`scripta` in that list too, since explicit settings override extension defaults.
+
 Snippets: `scripta`, `scriptamain` (also `scr`, `scrmain`), `fn`, `if`, `ifelse`, `foreach`, `foreachkv`, `for`,
 `while`, `try`, `echo`, and `require`. Use **Insert Snippet** or completion to
 insert one. The script snippets are intended for empty files.

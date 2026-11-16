@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Include `scripta` in Code Spell Checker's default accepted words.
+
 ## 0.3.0
 
 - Recognize official `.scripta` files and shorthand `.scta` files.

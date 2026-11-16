@@ -28,6 +28,11 @@
     "package": "vsce package --out dist/"
   },
   "contributes": {
+    "configurationDefaults": {
+      "cSpell.words": [
+        "scripta"
+      ]
+    },
     "languages": [
       {
         "id": "scripta",
