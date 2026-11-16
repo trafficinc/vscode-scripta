@@ -20,6 +20,14 @@ insert one. The script snippets are intended for empty files.
 
 ## Install locally
 
+To rebuild the package in `dist/`, run this from the project root (requires Python 3):
+
+```sh
+python3 scripts/package.py
+```
+
+This creates or replaces `dist/scripta-language-support-0.3.0.vsix`.
+
 In VS Code, run **Extensions: Install from VSIX...** from the Command Palette
 and choose `dist/scripta-language-support-0.3.0.vsix`. Open a `.scripta` file, or reopen
 an existing one if its language mode was previously set manually.
