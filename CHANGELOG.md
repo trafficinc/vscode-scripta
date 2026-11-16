@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
 - Add Format Document and Format Selection using the runtime's `scripta fmt` command.
 - Enable formatting on save for Scripta by default; disable with `[scripta]` → `editor.formatOnSave`.

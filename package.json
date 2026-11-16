@@ -2,7 +2,7 @@
   "name": "scripta-language-support",
   "displayName": "Scripta Language Support",
   "description": "Scripta language support with syntax highlighting, snippets, formatting, run commands, and syntax diagnostics.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "trafficinc",
   "license": "MIT",
   "engines": {
