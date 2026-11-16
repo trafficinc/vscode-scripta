@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add Format Document and Format Selection using the runtime's `scripta fmt` command.
+- Enable formatting on save for Scripta by default; disable with `[scripta]` → `editor.formatOnSave`.
 - Include `scripta` in Code Spell Checker's default accepted words.
 
 ## 0.3.0

@@ -2,8 +2,10 @@
 const path = require('node:path');
 const { checkFile } = require('./checker');
 const { parseDiagnostics } = require('./diagnostics');
+const { registerFormatting } = require('./formatter');
 
 function activateWithApi(vscode, context, checker = checkFile) {
+  registerFormatting(vscode, context);
   const diagnostics = vscode.languages.createDiagnosticCollection('scripta');
   const output = vscode.window.createOutputChannel('Scripta');
   const pending = new Map();

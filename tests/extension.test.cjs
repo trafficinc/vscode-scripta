@@ -16,7 +16,7 @@ function harness(checker = async () => ({ exitCode: 0, output: '' })) {
   const items = new Map();
   const diagnostics = { set(uri, value) { items.set(uri.toString(), value); }, delete(uri) { items.delete(uri.toString()); }, clear() { items.clear(); }, dispose() {} };
   const vscode = {
-    languages: { createDiagnosticCollection: () => diagnostics },
+    languages: { createDiagnosticCollection: () => diagnostics, registerDocumentRangeFormattingEditProvider: () => ({ dispose() {} }) },
     window: { activeTextEditor: { document }, createOutputChannel: () => ({ appendLine: s => calls.logs.push(s), show() {}, dispose() {} }),
       showErrorMessage: s => calls.errors.push(s), showWarningMessage: s => calls.warnings.push(s), setStatusBarMessage() {} },
     workspace: { isTrusted: true, getConfiguration: () => ({ get: (name, fallback) => values[name] ?? fallback }), getWorkspaceFolder: () => undefined,

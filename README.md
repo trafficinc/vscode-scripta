@@ -68,8 +68,41 @@ does not recursively check dependencies or perform full static type checking.
 Run and Check save modified files first and offer Save As for an untitled
 Scripta document. These features require a trusted workspace and files on disk;
 remote workspaces use the runtime installed on the remote host. Highlighting
-and snippets work without `scripta` and in Restricted Mode. IntelliSense, formatting,
+and snippets work without `scripta` and in Restricted Mode. IntelliSense
 and debugging are not included.
+
+## Format source code
+
+Scripta files format automatically when saved. Use VS Code's **Format Document**
+or **Format Selection** commands to format manually. Formatting requires a trusted
+workspace and a Scripta runtime that supports `scripta fmt`, found on PATH or through
+`scripta.executablePath`.
+
+To turn automatic formatting off, open **Preferences: Configure Language Specific
+Settings**, choose **Scripta**, and uncheck **Editor: Format On Save**. You can also
+set this in your user or workspace `settings.json`:
+
+```json
+{
+  "[scripta]": {
+    "editor.formatOnSave": false
+  }
+}
+```
+
+Set it to `true` to enable it again. Manual formatting remains available when
+format on save is disabled. If multiple formatters are installed for Scripta,
+choose **Scripta Language Support** using **Format Document With… → Configure
+Default Formatter**.
+
+Formatting uses the runtime's PHP-like style with four-space indentation. It works
+on the current buffer, including unsaved changes and untitled documents, using a
+temporary copy. The original file is saved only through VS Code. Strings and
+comments keep their contents, and existing line endings are preserved. Selection
+formatting applies only whitespace changes fully inside the selected range; the
+whole document must have valid syntax. Invalid syntax, missing runtime support,
+or formatter failures leave the buffer unchanged; details appear in
+**Output → Scripta Formatting**.
 
 ## Develop
 
