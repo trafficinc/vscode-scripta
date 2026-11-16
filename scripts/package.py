@@ -15,7 +15,7 @@ manifest = f'''<?xml version="1.0" encoding="utf-8"?>
   <Identity Language="en-US" Id="{name}" Version="{version}" Publisher="{package['publisher']}"/>
   <DisplayName>{escape(package['displayName'])}</DisplayName>
   <Description xml:space="preserve">{escape(package['description'])}</Description>
-  <Tags>scripta,scr</Tags><Categories>Programming Languages,Snippets</Categories>
+  <Tags>scripta,scta,scr</Tags><Categories>Programming Languages,Snippets</Categories>
   <Properties><Property Id="Microsoft.VisualStudio.Code.Engine" Value="{package['engines']['vscode']}"/></Properties>
   <License>extension/LICENSE</License>
  </Metadata>
@@ -32,7 +32,8 @@ content_types = '''<?xml version="1.0" encoding="utf-8"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
  <Default Extension="js" ContentType="application/javascript"/>
  <Default Extension="json" ContentType="application/json"/>
- <Default Extension="scr" ContentType="text/plain"/>
+ <Default Extension="scripta" ContentType="text/plain"/>
+ <Default Extension="scta" ContentType="text/plain"/>
  <Default Extension="md" ContentType="text/markdown"/>
  <Default Extension="svg" ContentType="image/svg+xml"/>
  <Default Extension="vsixmanifest" ContentType="text/xml"/>

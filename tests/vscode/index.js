@@ -6,16 +6,16 @@ const path = require('node:path');
 const vscode = require('vscode');
 
 exports.run = async function () {
-  const executable = process.env.SCR_BIN;
-  assert.ok(executable, 'Set SCR_BIN to the Scripta executable');
+  const executable = (process.env.SCRIPTA_BIN || process.env.SCR_BIN);
+  assert.ok(executable, 'Set SCRIPTA_BIN to the Scripta executable');
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'scripta-editor-'));
-  const filename = path.join(dir, 'script with $ and ;.scr');
+  const filename = path.join(dir, 'script with $ and ;.scripta');
   const uri = vscode.Uri.file(filename);
   const configuration = vscode.workspace.getConfiguration('scripta');
   try {
     await configuration.update('executablePath', executable, vscode.ConfigurationTarget.Global);
     await configuration.update('checkOnSave', false, vscode.ConfigurationTarget.Global);
-    await fs.writeFile(filename, '<?scr\n$x = "😀"; @');
+    await fs.writeFile(filename, '<?scripta\n$x = "😀"; @');
     const document = await vscode.workspace.openTextDocument(uri);
     assert.equal(document.languageId, 'scripta');
     await vscode.window.showTextDocument(document);
@@ -28,7 +28,7 @@ exports.run = async function () {
     assert.equal(errors[0].code, 'E0101');
     assert.equal(document.getText(errors[0].range), '@');
     const edit = new vscode.WorkspaceEdit();
-    edit.replace(uri, new vscode.Range(0, 0, document.lineCount, 0), '<?scr\necho "editor smoke test\\n";');
+    edit.replace(uri, new vscode.Range(0, 0, document.lineCount, 0), '<?scripta\necho "editor smoke test\\n";');
     await vscode.workspace.applyEdit(edit);
     // Run must save this dirty buffer, then execute successfully.
     const ended = new Promise((resolve, reject) => {

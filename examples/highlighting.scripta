@@ -1,8 +1,8 @@
-#!/usr/bin/env scr
-<?scr
+#!/usr/bin/env scripta
+<?scripta
 // Scripta uses literal strings: $name is not interpolated.
 # Both line comment styles are supported.
-/* Block comments may contain "quotes", <?scr, and ?>. */
+/* Block comments may contain "quotes", <?scripta, and ?>. */
 function greet($name: string): string {
     return "Hello, " . $name . "!\n";
 }

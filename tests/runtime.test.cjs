@@ -8,13 +8,13 @@ const { parseDiagnostics } = require('../src/diagnostics');
 
 function fixture() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'scripta-runtime-'));
-  return { dir, file: path.join(dir, 'script with $ and ;.scr'), dispose: () => fs.rmSync(dir, { recursive: true, force: true }) };
+  return { dir, file: path.join(dir, 'script with $ and ;.scripta'), dispose: () => fs.rmSync(dir, { recursive: true, force: true }) };
 }
 test('diagnostics parse multiple errors, Windows paths, help and ANSI colors', () => {
-  const output = '\x1b[31merror[E0202]: use strict equality\x1b[0m\n  --> C:\\work\\test.scr:2:4\n  |\n2 | $a == 1;\n  |    ^^\nhelp: use ===\n\nerror[E0201]: invalid control flow\n  --> C:\\work\\test.scr:3:1\n  | ^^^^^';
-  const records = parseDiagnostics(output, '<?scr\n$a == 1;\nbreak;');
+  const output = '\x1b[31merror[E0202]: use strict equality\x1b[0m\n  --> C:\\work\\test.scripta:2:4\n  |\n2 | $a == 1;\n  |    ^^\nhelp: use ===\n\nerror[E0201]: invalid control flow\n  --> C:\\work\\test.scripta:3:1\n  | ^^^^^';
+  const records = parseDiagnostics(output, '<?scripta\n$a == 1;\nbreak;');
   assert.equal(records.length, 2);
-  assert.deepEqual(records[0], { path: 'C:\\work\\test.scr', line: 1, start: 3, end: 5, code: 'E0202', message: 'use strict equality\nuse ===' });
+  assert.deepEqual(records[0], { path: 'C:\\work\\test.scripta', line: 1, start: 3, end: 5, code: 'E0202', message: 'use strict equality\nuse ===' });
   assert.equal(records[1].end, 5);
 });
 test('scalar columns convert astral Unicode, BOM, tabs, CRLF and EOF correctly', () => {
@@ -43,14 +43,19 @@ test('checker bounds slow checks and supports cancellation', async () => {
     await assert.rejects(promise, { code: 'ABORT_ERR' });
   } finally { f.dispose(); }
 });
-test('real scr checker returns diagnostics without executing the script', { skip: !process.env.SCR_BIN && 'Set SCR_BIN for runtime integration' }, async () => {
+test('real Scripta checker returns diagnostics without executing the script', { skip: !(process.env.SCRIPTA_BIN || process.env.SCR_BIN) && 'Set SCRIPTA_BIN for runtime integration' }, async () => {
   const f = fixture();
   try {
-    fs.writeFileSync(f.file, '<?scr\necho "hello";');
-    assert.deepEqual(await checkFile(process.env.SCR_BIN, f.file), { exitCode: 0, output: '' });
-    const source = '<?scr\n$x = "😀"; @';
+    for (const extension of ['.scripta', '.scta']) {
+      for (const tag of ['<?scripta', '<?scr']) {
+        const file = path.join(f.dir, 'hello' + extension);
+        fs.writeFileSync(file, tag + '\necho "hello";');
+        assert.deepEqual(await checkFile((process.env.SCRIPTA_BIN || process.env.SCR_BIN), file), { exitCode: 0, output: '' });
+      }
+    }
+    const source = '<?scripta\n$x = "😀"; @';
     fs.writeFileSync(f.file, source);
-    const result = await checkFile(process.env.SCR_BIN, f.file);
+    const result = await checkFile((process.env.SCRIPTA_BIN || process.env.SCR_BIN), f.file);
     assert.equal(result.exitCode, 1);
     const [record] = parseDiagnostics(result.output, source);
     assert.equal(record.path, f.file);

@@ -1,18 +1,24 @@
 {
   "Script": {
-    "prefix": "scr",
+    "prefix": [
+      "scripta",
+      "scr"
+    ],
     "description": "New Scripta script",
     "body": [
-      "<?scr",
+      "<?scripta",
       "$0"
     ]
   },
   "Executable script": {
-    "prefix": "scrmain",
+    "prefix": [
+      "scriptamain",
+      "scrmain"
+    ],
     "description": "Scripta script with a Unix shebang",
     "body": [
-      "#!/usr/bin/env scr",
-      "<?scr",
+      "#!/usr/bin/env scripta",
+      "<?scripta",
       "$0"
     ]
   },
@@ -104,7 +110,7 @@
     "prefix": "require",
     "description": "Load a local script once",
     "body": [
-      "require_once \"${1:lib/helpers.scr}\";",
+      "require_once \"${1:lib/helpers.scripta}\";",
       "$0"
     ]
   }

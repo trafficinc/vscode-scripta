@@ -99,7 +99,7 @@
       "patterns": [
         {
           "name": "punctuation.section.embedded.begin.scripta",
-          "match": "<\\?scr(?![A-Za-z0-9_])"
+          "match": "<\\?(?:scripta|scr)(?![A-Za-z0-9_])"
         },
         {
           "name": "punctuation.section.embedded.end.scripta",

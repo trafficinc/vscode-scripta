@@ -6,12 +6,12 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 
 function harness(checker = async () => ({ exitCode: 0, output: '' })) {
   const calls = { tasks: [], errors: [], warnings: [], logs: [], executed: [], saves: 0 };
-  const values = { executablePath: '/tools/scr executable', runArguments: ['hello world', '$(literal)'], checkOnSave: true };
+  const values = { executablePath: '/tools/scripta executable', runArguments: ['hello world', '$(literal)'], checkOnSave: true };
   const events = {};
   const register = name => fn => { events[name] = fn; return { dispose() {} }; };
-  const uri = { scheme: 'file', fsPath: path.resolve('examples/a file.scr'), toString() { return 'file://' + this.fsPath; } };
+  const uri = { scheme: 'file', fsPath: path.resolve('examples/a file.scripta'), toString() { return 'file://' + this.fsPath; } };
   const document = { uri, languageId: 'scripta', version: 1, isDirty: false, isClosed: false, isUntitled: false,
-    getText: () => '<?scr\n$a == 1;', async save() { calls.saves++; this.isDirty = false; return true; } };
+    getText: () => '<?scripta\n$a == 1;', async save() { calls.saves++; this.isDirty = false; return true; } };
   const commands = new Map();
   const items = new Map();
   const diagnostics = { set(uri, value) { items.set(uri.toString(), value); }, delete(uri) { items.delete(uri.toString()); }, clear() { items.clear(); }, dispose() {} };
@@ -43,6 +43,17 @@ test('Run saves changes and launches a direct process task with literal argument
   assert.deepEqual(task.execution.args, ['run', '--', h.document.uri.fsPath, 'hello world', '$(literal)']);
   assert.equal(task.execution.options.cwd, path.dirname(h.document.uri.fsPath));
   assert.equal(task.presentationOptions.focus, true);
+});
+test('Run and Check default to the canonical scripta executable', async () => {
+  const checked = [];
+  const h = harness(async executable => { checked.push(executable); return { exitCode: 0, output: '' }; });
+  delete h.values.executablePath;
+  await h.commands.get('scripta.runFile')();
+  assert.equal(h.calls.tasks[0].execution.process, 'scripta');
+  await h.commands.get('scripta.checkFile')();
+  assert.deepEqual(checked, ['scripta']);
+  const manifest = require('../package.json');
+  assert.equal(manifest.contributes.configuration.properties['scripta.executablePath'].default, 'scripta');
 });
 test('cancelled save, remote documents and untrusted workspaces cannot run', async () => {
   const h = harness();

@@ -43,7 +43,7 @@
     <circle cx="23" cy="24" r="4" fill="#ec8c93"/>
     <circle cx="39" cy="24" r="4" fill="#e7bf7e"/>
     <circle cx="55" cy="24" r="4" fill="#7bd8b4"/>
-    <text x="83" y="29" fill="#bfcee0" font-family="Arial, Helvetica, sans-serif" font-size="13">hello.scr</text>
+    <text x="83" y="29" fill="#bfcee0" font-family="Arial, Helvetica, sans-serif" font-size="13">hello.scripta</text>
     <path d="m550 18 10 6-10 6Z" fill="#80e5c3"/>
     <g font-family="Consolas, 'Liberation Mono', Menlo, monospace" font-size="17">
       <g fill="#4d627c" text-anchor="end">
@@ -52,7 +52,7 @@
         <text x="38" y="212">5</text><text x="38" y="243">6</text>
       </g>
       <g fill="#d6e4f4">
-        <text x="62" y="88" fill="#78e9ca">&lt;?scr</text>
+        <text x="62" y="88" fill="#78e9ca">&lt;?scripta</text>
         <text x="62" y="119"><tspan fill="#b6a4ef">function</tspan> <tspan fill="#88cef0">greet</tspan>($name: <tspan fill="#e7bf7e">string</tspan>) {</text>
         <text x="62" y="150" xml:space="preserve">  <tspan fill="#b6a4ef">return</tspan> <tspan fill="#a6d99a">"Hello, "</tspan> . $name;</text>
         <text x="62" y="181">}</text>
@@ -62,6 +62,6 @@
     <path d="M0 273H586" stroke="#27394e"/>
     <circle cx="23" cy="293" r="4" fill="#80e5c3"/>
     <text x="36" y="298" fill="#8fa6c1" font-family="Arial, Helvetica, sans-serif" font-size="12">Scripta</text>
-    <text x="563" y="298" fill="#8fa6c1" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end">.scr</text>
+    <text x="563" y="298" fill="#8fa6c1" font-family="Arial, Helvetica, sans-serif" font-size="12" text-anchor="end">.scripta</text>
   </g>
 </svg>

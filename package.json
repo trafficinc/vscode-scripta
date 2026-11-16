@@ -2,7 +2,7 @@
   "name": "scripta-language-support",
   "displayName": "Scripta Language Support",
   "description": "Scripta language support with syntax highlighting, snippets, run commands, and syntax diagnostics.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "trafficinc",
   "license": "MIT",
   "engines": {
@@ -14,6 +14,7 @@
   ],
   "keywords": [
     "scripta",
+    "scta",
     "scr",
     "syntax",
     "highlighting"
@@ -35,9 +36,10 @@
           "scripta"
         ],
         "extensions": [
-          ".scr"
+          ".scripta",
+          ".scta"
         ],
-        "firstLine": "^\\uFEFF?(?:#!\\s*(?:/\\S*/)?scr(?:\\s|$)|#!\\s*/\\S*/env\\s+(?:-S\\s+)?scr(?:\\s|$)|\\s*<\\?scr(?![A-Za-z0-9_]))",
+        "firstLine": "^\\uFEFF?(?:#!\\s*(?:/\\S*/)?(?:scripta|scr)(?:\\s|$)|#!\\s*/\\S*/env\\s+(?:-S\\s+)?(?:scripta|scr)(?:\\s|$)|\\s*<\\?(?:scripta|scr)(?![A-Za-z0-9_]))",
         "configuration": "./language-configuration.json"
       }
     ],
@@ -96,7 +98,7 @@
       "properties": {
         "scripta.executablePath": {
           "type": "string",
-          "default": "scr",
+          "default": "scripta",
           "scope": "machine-overridable",
           "description": "Scripta executable name on PATH or a full path. Do not include arguments."
         },
@@ -113,7 +115,7 @@
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "description": "Run scr check after saving a Scripta file. Requires a trusted workspace and the scr executable."
+          "description": "Run scripta check after saving a Scripta file. Requires a trusted workspace and the Scripta executable."
         }
       }
     },

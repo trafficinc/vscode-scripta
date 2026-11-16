@@ -7,7 +7,7 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "${workspaceFolder}/examples/highlighting.scr"
+        "${workspaceFolder}/examples/highlighting.scripta"
       ]
     }
   ]

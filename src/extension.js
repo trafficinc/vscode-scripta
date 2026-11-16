@@ -28,8 +28,8 @@ function activateWithApi(vscode, context, checker = checkFile) {
     }
   }
   function executable(document) {
-    const value = settings(document).get('executablePath', 'scr');
-    if (typeof value !== 'string' || !value.trim()) throw new Error('Set scripta.executablePath to the scr executable or its full path.');
+    const value = settings(document).get('executablePath', 'scripta');
+    if (typeof value !== 'string' || !value.trim()) throw new Error('Set scripta.executablePath to the Scripta executable or its full path.');
     return value;
   }
   async function activeDocument() {
@@ -87,7 +87,7 @@ function activateWithApi(vscode, context, checker = checkFile) {
     } catch (error) {
       if (current()) {
         const detail = error.code === 'ENOENT'
-          ? 'Cannot find scr. Set scripta.executablePath in Settings to your Scripta executable.'
+          ? 'Cannot find scripta. Set scripta.executablePath in Settings to your Scripta executable.'
           : error.killed ? 'Scripta check exceeded its time limit.' : `Scripta check failed: ${error.message}`;
         fail(detail, explicit);
       }
