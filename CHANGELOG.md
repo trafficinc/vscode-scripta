@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add built-in and keyword completion, with module suggestions after `::` and required argument placeholders.
+- Add hover signatures and documentation for 226 global and module functions.
+- Keep basic IntelliSense available without the runtime and in Restricted Mode; suppress it in strings and comments.
+
 ## 0.4.0
 
 - Add Format Document and Format Selection using the runtime's `scripta fmt` command.

@@ -1,7 +1,7 @@
 {
   "name": "scripta-language-support",
   "displayName": "Scripta Language Support",
-  "description": "Scripta language support with syntax highlighting, snippets, formatting, run commands, and syntax diagnostics.",
+  "description": "Scripta language support with syntax highlighting, snippets, basic IntelliSense, formatting, run commands, and syntax diagnostics.",
   "version": "0.4.0",
   "publisher": "trafficinc",
   "license": "MIT",
@@ -157,7 +157,7 @@
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": "limited",
-      "description": "Syntax highlighting and snippets work; formatting, running, and checking scripts require a trusted workspace.",
+      "description": "Syntax highlighting, snippets, basic completion, and hover work; formatting, running, and checking scripts require a trusted workspace.",
       "restrictedConfigurations": [
         "scripta.executablePath",
         "scripta.runArguments"

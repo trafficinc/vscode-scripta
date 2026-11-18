@@ -1,0 +1,2873 @@
+{
+  "source": {
+    "repository": "https://github.com/trafficinc/scripta",
+    "revision": "887ff6b6694848f140c1e41c018938b4e00f7c2f",
+    "references": [
+      "docs/standard-library.md",
+      "docs/sqlite.md",
+      "crates/scr-lexer/src/lib.rs"
+    ]
+  },
+  "keywords": [
+    "true",
+    "false",
+    "null",
+    "echo",
+    "if",
+    "elseif",
+    "else",
+    "while",
+    "for",
+    "foreach",
+    "as",
+    "function",
+    "class",
+    "interface",
+    "implements",
+    "extends",
+    "new",
+    "in",
+    "return",
+    "break",
+    "continue",
+    "try",
+    "catch",
+    "finally",
+    "throw",
+    "exit",
+    "require",
+    "require_once"
+  ],
+  "functions": [
+    {
+      "name": "Bytes::decodeUtf8",
+      "signature": "Bytes::decodeUtf8(data: bytes): string",
+      "description": "Strict decoding; invalid UTF-8 raises `EncodingError`.",
+      "parameters": [
+        {
+          "name": "data",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Bytes::encodeUtf8",
+      "signature": "Bytes::encodeUtf8(text: string): bytes",
+      "description": "Encodes the string as UTF-8 bytes.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Bytes::slice",
+      "signature": "Bytes::slice(data: bytes, start: int, length: int optional): bytes",
+      "description": "Nonnegative byte positions; omitted length returns the suffix. Start at the end is allowed; invalid bounds raise `RangeError`. A slice can split a UTF-8 sequence.",
+      "parameters": [
+        {
+          "name": "data",
+          "optional": false
+        },
+        {
+          "name": "start",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Cli::arg",
+      "signature": "Cli::arg(index)",
+      "description": "Zero-based nonnegative int index; string or null if out of range.",
+      "parameters": [
+        {
+          "name": "index",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Cli::args",
+      "signature": "Cli::args(): list",
+      "description": "All script arguments as UTF-8 strings, preserved verbatim.",
+      "parameters": []
+    },
+    {
+      "name": "Cli::has",
+      "signature": "Cli::has(name): bool",
+      "description": "Whether an option is present before the first `--`.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Cli::isTerminal",
+      "signature": "Cli::isTerminal(stream: string): bool",
+      "description": "Whether the process's `\"stdin\"`, `\"stdout\"`, or `\"stderr\"` handle connects to a terminal.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Cli::option",
+      "signature": "Cli::option(name)",
+      "description": "Last occurrence's value string, or null for absent/valueless options.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Cli::prompt",
+      "signature": "Cli::prompt(message)",
+      "description": "Writes and flushes a string prompt, reads one UTF-8 line, strips LF/CRLF, and returns it; EOF gives null.",
+      "parameters": [
+        {
+          "name": "message",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Cli::readLine",
+      "signature": "Cli::readLine(maxLineBytes: int optional): string or null",
+      "description": "Reads a bounded UTF-8 stdin line without writing or flushing output. Default raw line limit is 1 MiB; EOF returns null.",
+      "parameters": [
+        {
+          "name": "maxLineBytes",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Clock::monotonicMs",
+      "signature": "Clock::monotonicMs(): float",
+      "description": "Returns nonnegative monotonic milliseconds. Use differences to measure elapsed time, not calendar dates.",
+      "parameters": []
+    },
+    {
+      "name": "Csv::close",
+      "signature": "Csv::close(reader: CsvReader): null",
+      "description": "Idempotently closes the reader and all aliases; `reader->closed` reports state.",
+      "parameters": [
+        {
+          "name": "reader",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Csv::encode",
+      "signature": "Csv::encode(rows: list, options optional): string",
+      "description": "Writes rows of strings with necessary quoting and CRLF record terminators. Empty rows input returns an empty string.",
+      "parameters": [
+        {
+          "name": "rows",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Csv::open",
+      "signature": "Csv::open(path: string, options optional): CsvReader",
+      "description": "Opens a regular file with the same filesystem policy as `File::read`.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Csv::parse",
+      "signature": "Csv::parse(text: string, options optional): list",
+      "description": "Returns a list of rows, each a list of strings. Empty input returns an empty list.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Csv::readRow",
+      "signature": "Csv::readRow(reader: CsvReader): list or null",
+      "description": "Reads a complete record; null at EOF. Reading an explicitly closed reader raises `StreamError`.",
+      "parameters": [
+        {
+          "name": "reader",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Date::format",
+      "signature": "Date::format(timestamp: int, format: string, timezone: string optional): string",
+      "description": "Formats signed Unix milliseconds using Chrono strftime directives. Omitted timezone means UTC; pass `\"local\"`, `\"UTC\"`, or an IANA name such as `\"America/New_York\"`.",
+      "parameters": [
+        {
+          "name": "timestamp",
+          "optional": false
+        },
+        {
+          "name": "format",
+          "optional": false
+        },
+        {
+          "name": "timezone",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Date::now",
+      "signature": "Date::now(): int",
+      "description": "Current wall-clock Unix **milliseconds**; may move backward when the system clock changes. Timezone selection changes display, not this instant.",
+      "parameters": []
+    },
+    {
+      "name": "Date::parse",
+      "signature": "Date::parse(value): int",
+      "description": "Parses RFC 3339 with an explicit `Z` or numeric offset, returning UTC Unix milliseconds. Submillisecond precision is floored, including dates before 1970.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Date::sleep",
+      "signature": "Date::sleep(milliseconds): null",
+      "description": "Same nonnegative int duration, `sleep` permission, and cooperative cancellation as global `sleep`. Uses monotonic elapsed time.",
+      "parameters": [
+        {
+          "name": "milliseconds",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::change",
+      "signature": "Dir::change(path): null",
+      "description": "Requires an existing directory and saves its canonical absolute path in this runtime.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::create",
+      "signature": "Dir::create(path): null",
+      "description": "Creates one new directory; its parent must exist. Any existing name raises an error.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::createAll",
+      "signature": "Dir::createAll(path): null",
+      "description": "Creates missing parents; an existing directory succeeds. Files and final symlinks are rejected.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::current",
+      "signature": "Dir::current(): string",
+      "description": "Canonical absolute runtime working directory.",
+      "parameters": []
+    },
+    {
+      "name": "Dir::directories",
+      "signature": "Dir::directories(path): list",
+      "description": "Shallow list of directory snapshots in the same order.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::entries",
+      "signature": "Dir::entries(path): list",
+      "description": "Shallow, sorted list of maps with `name`, absolute `path`, `isDirectory`, `isFile`, and `isSymlink`. Includes dangling links and special files without resolving targets. Uses the execution value-byte limit before growing the result.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::exists",
+      "signature": "Dir::exists(path): bool",
+      "description": "True for a directory; false for missing paths, files, and final symlinks. Other errors propagate.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::files",
+      "signature": "Dir::files(path): list",
+      "description": "Shallow list of regular-file `DirEntry` snapshots, sorted by UTF-8 name in case-sensitive lexical order.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Dir::remove",
+      "signature": "Dir::remove(path): null",
+      "description": "Removes only an empty directory. Rejects root, current directory, and its ancestors. There is no recursive-delete argument or API.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Env::all",
+      "signature": "Env::all(): map",
+      "description": "UTF-8 string keys/values, deterministically sorted by name.",
+      "parameters": []
+    },
+    {
+      "name": "Env::get",
+      "signature": "Env::get(name)",
+      "description": "String value or null if absent; an empty value is an empty string.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Env::has",
+      "signature": "Env::has(name): bool",
+      "description": "Whether the name is present, including empty values.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Env::remove",
+      "signature": "Env::remove(name): null",
+      "description": "Removes a name; an already absent name succeeds.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Env::set",
+      "signature": "Env::set(name, value): null",
+      "description": "Both arguments must be strings. Replaces/adds the runtime-local value.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::append",
+      "signature": "File::append(path, contents): null",
+      "description": "Creates a missing file or appends UTF-8 bytes to a regular file.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "contents",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::appendBytes",
+      "signature": "File::appendBytes(path: string, contents: bytes): null",
+      "description": "Creates a missing file or appends exact bytes.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "contents",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::close",
+      "signature": "File::close(stream: FileStream): null",
+      "description": "Idempotently closes the stream and all its aliases.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::copy",
+      "signature": "File::copy(source, destination): null",
+      "description": "Copies bytes, including binary files, to a new file. Refuses any existing destination, including symlinks and directories. Does not copy metadata/permissions.",
+      "parameters": [
+        {
+          "name": "source",
+          "optional": false
+        },
+        {
+          "name": "destination",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::delete",
+      "signature": "File::delete(path): null",
+      "description": "Deletes one regular file. Missing paths raise an exception. Never deletes directories or symlinks.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::exists",
+      "signature": "File::exists(path): bool",
+      "description": "True for a regular file. Missing paths, directories, and final symlinks return false. Permission and other inspection failures raise exceptions.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::extension",
+      "signature": "File::extension(path): string",
+      "description": "Lexical suffix without the dot, or empty string. Does not require the file to exist; same as `Path::extension`.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::modified",
+      "signature": "File::modified(path): int",
+      "description": "Modification time in whole Unix seconds (floored), checked against i64 range.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::move",
+      "signature": "File::move(source, destination): null",
+      "description": "Moves a regular file to a new name, refusing any existing destination. Uses exclusive hard-link creation followed by source removal; cross-device/unsupported-link errors fall back to exclusive copy then removal.",
+      "parameters": [
+        {
+          "name": "source",
+          "optional": false
+        },
+        {
+          "name": "destination",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::openLines",
+      "signature": "File::openLines(path: string, maxLineBytes: int optional): FileStream",
+      "description": "Opens a UTF-8 line stream; default raw line limit is 1 MiB. See bounded file streams.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "maxLineBytes",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "File::read",
+      "signature": "File::read(path): string",
+      "description": "Reads a complete regular file as UTF-8. Invalid file bytes raise `EncodingError`.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::readBytes",
+      "signature": "File::readBytes(path: string): bytes",
+      "description": "Reads a complete regular file without text decoding, subject to the execution value limit.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::readLine",
+      "signature": "File::readLine(stream: FileStream): string or null",
+      "description": "Returns the next line without LF/CRLF, or null at EOF.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::size",
+      "signature": "File::size(path): int",
+      "description": "Regular-file size in bytes, checked against i64 range.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::write",
+      "signature": "File::write(path, contents): null",
+      "description": "Creates or truncates a regular file, replacing its contents. Parent directories must exist.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "contents",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::writeAtomic",
+      "signature": "File::writeAtomic(path: string, contents: string): null",
+      "description": "Stages a complete UTF-8 file beside the destination, then atomically creates or replaces it. Parent directory must exist; final symlinks, nonregular files, and read-only destinations are rejected.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "contents",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "File::writeBytes",
+      "signature": "File::writeBytes(path: string, contents: bytes): null",
+      "description": "Creates or truncates a regular file and writes the exact bytes.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "contents",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Form::decode",
+      "signature": "Form::decode(text: string): list",
+      "description": "Parses a form body into ordered two-string pairs. Converts raw `+` to space before percent-decoding; does not remove a leading `?`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Form::encode",
+      "signature": "Form::encode(parameters): string",
+      "description": "Builds an `application/x-www-form-urlencoded` body. Spaces become `+`; ASCII letters, digits, and `*-._` remain unchanged.",
+      "parameters": [
+        {
+          "name": "parameters",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Html::escape",
+      "signature": "Html::escape(text: string): string",
+      "description": "Escapes plain UTF-8 text for HTML text nodes and ordinary quoted attribute values.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Http::download",
+      "signature": "Http::download(url: string, destination: string, options optional): map",
+      "description": "Streams an HTTP/HTTPS response to a new destination using staged publication. Refuses overwrite.",
+      "parameters": [
+        {
+          "name": "url",
+          "optional": false
+        },
+        {
+          "name": "destination",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Http::get",
+      "signature": "Http::get(url: string, options = []): HttpResponse",
+      "description": "Makes a synchronous HTTP/HTTPS GET request and returns a bounded response.",
+      "parameters": [
+        {
+          "name": "url",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Http::post",
+      "signature": "Http::post(url: string, body: string or bytes, options = []): HttpResponse",
+      "description": "Makes a synchronous HTTP/HTTPS POST request with a string or byte body.",
+      "parameters": [
+        {
+          "name": "url",
+          "optional": false
+        },
+        {
+          "name": "body",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Http::request",
+      "signature": "Http::request(method: string, url: string, options = []): HttpResponse",
+      "description": "Makes a synchronous HTTP/HTTPS request. Supply a request body through options.",
+      "parameters": [
+        {
+          "name": "method",
+          "optional": false
+        },
+        {
+          "name": "url",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Json::decode",
+      "signature": "Json::decode(text: string): any",
+      "description": "Decodes JSON into Scripta values. Invalid JSON raises JsonError.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Json::encode",
+      "signature": "Json::encode(value): string",
+      "description": "Encodes a value as compact JSON. Map keys must be strings; native objects and callables are rejected.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Json::pretty",
+      "signature": "Json::pretty(value): string",
+      "description": "Encodes JSON with two-space indentation.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::chunk",
+      "signature": "List::chunk(items: list, size: int): list",
+      "description": "Returns contiguous sublists of at most size elements, with a possibly shorter final sublist. Size must be positive, otherwise `RangeError`. Empty input returns `[]`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "size",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::column",
+      "signature": "List::column(rows: list, field: int or string): list",
+      "description": "Extracts field from each map row in order. Non-map rows raise `TypeError`, missing fields raise `RangeError`, and stored null is retained. Empty rows return `[]`.",
+      "parameters": [
+        {
+          "name": "rows",
+          "optional": false
+        },
+        {
+          "name": "field",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::concat",
+      "signature": "List::concat(left: list, right: list): list",
+      "description": "Returns left's elements followed by right's. Empty lists are valid. Both inputs remain unchanged.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::contains",
+      "signature": "List::contains(items: list, value: any): bool",
+      "description": "Tests membership with strict recursive equality, like `===`. Int `1`, float `1.0`, and string `\"1\"` differ. Lists compare in order; maps compare contents independent of insertion order. Native objects and callables compare by identity. Empty lists return false.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::diff",
+      "signature": "List::diff(left: list, right: list): list",
+      "description": "Keeps left values absent from right, using strict recursive equality. Preserves left order and duplicates.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::fill",
+      "signature": "List::fill(count: int, value: any): list",
+      "description": "Generates count independent copies of value. Count must be nonnegative, otherwise `RangeError`; zero returns `[]`.",
+      "parameters": [
+        {
+          "name": "count",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::intersect",
+      "signature": "List::intersect(left: list, right: list): list",
+      "description": "Keeps left values present in right, using strict recursive equality. Preserves left order and duplicates; right duplicates do not multiply results.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::pop",
+      "signature": "List::pop(items: list): map",
+      "description": "Removes the last value and returns `[\"items\" => remainingList, \"value\" => removedValue]`. Empty input raises `RangeError`; a removed null remains null.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::product",
+      "signature": "List::product(items: list): int or float",
+      "description": "Multiplies with the same numeric rules as `sum`. Empty input returns integer `1`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::push",
+      "signature": "List::push(items: list, value: any): list",
+      "description": "Appends one value to a copy. Use `concat` to append another list's elements.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::remove",
+      "signature": "List::remove(items: list, index: int): list",
+      "description": "Copies the list without the existing zero-based index and renumbers remaining positions. Negative or absent positions raise `RangeError`, including removal from an empty list.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "index",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::reverse",
+      "signature": "List::reverse(items: list): list",
+      "description": "Reverses element order. Empty input returns `[]`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::search",
+      "signature": "List::search(items: list, value: any): int or null",
+      "description": "Returns the first strictly equal value's index, or null when absent. Index zero is a successful match.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::shift",
+      "signature": "List::shift(items: list): map",
+      "description": "Like `pop`, but removes the first value.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::slice",
+      "signature": "List::slice(items: list, start: int, length: int optional): list",
+      "description": "Copies a contiguous range using nonnegative positions. Omitted length copies the suffix. Start beyond `len(items)`, negative offsets, or length beyond the remainder raise `RangeError`. Start at the end with omitted or zero length returns `[]`; `List::slice([], 0)` returns `[]`. Explicit null is not an omitted length.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "start",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "List::sort",
+      "signature": "List::sort(items: list, descending: bool optional): list",
+      "description": "Returns a stable sorted copy, ascending by default. Nonempty lists must contain only ints, only finite floats, or only strings. Mixed types, bools, nulls, collections, objects, and callables raise `TypeError`, even in a single-element list. Empty lists are valid. Set descending to true to reverse the comparison direction while preserving equal elements' original order.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "descending",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "List::splice",
+      "signature": "List::splice(items: list, start: int, length: int, replacement: list optional): map",
+      "description": "Returns `[\"items\" => updatedList, \"removed\" => removedList]`. Replacement defaults to `[]`. Start and length must be nonnegative, start cannot exceed the list length, and length cannot exceed the remainder; violations raise `RangeError`. Zero length inserts without removing. Start at the end permits appending. Explicit null is not an omitted replacement.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "start",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": false
+        },
+        {
+          "name": "replacement",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "List::sum",
+      "signature": "List::sum(items: list): int or float",
+      "description": "Adds homogeneous ints or finite floats in input order. Empty input returns integer `0`. Mixed types and nonnumeric/nonfinite inputs raise `TypeError`; integer overflow and nonfinite intermediate float results raise `ArithmeticError`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::unique",
+      "signature": "List::unique(items: list): list",
+      "description": "Keeps the first occurrence of each value using strict recursive equality. Preserves order.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "List::unshift",
+      "signature": "List::unshift(items: list, value: any): list",
+      "description": "Prepends one value to a copy.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Log::debug",
+      "signature": "Log::debug(message: string): null",
+      "description": "Writes a debug message as a JSON line to the configured log destination.",
+      "parameters": [
+        {
+          "name": "message",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Log::error",
+      "signature": "Log::error(message: string): null",
+      "description": "Writes an error message as a JSON line to the configured log destination.",
+      "parameters": [
+        {
+          "name": "message",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Log::info",
+      "signature": "Log::info(message: string): null",
+      "description": "Writes an info message as a JSON line to the configured log destination.",
+      "parameters": [
+        {
+          "name": "message",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Log::setFile",
+      "signature": "Log::setFile(path: string or null): null",
+      "description": "Selects an append-only log file. Pass null to restore stderr.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Log::warn",
+      "signature": "Log::warn(message: string): null",
+      "description": "Writes a warning message as a JSON line to the configured log destination.",
+      "parameters": [
+        {
+          "name": "message",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::column",
+      "signature": "Map::column(rows: list, field: int or string, indexField: int or string): map",
+      "description": "Extracts field values keyed by each row's indexField value. Rows must be maps and both fields must exist, with the same errors as List column. Index values must be ints or strings. Duplicate indexes overwrite values without moving their first insertion position. Empty rows return an empty map.",
+      "parameters": [
+        {
+          "name": "rows",
+          "optional": false
+        },
+        {
+          "name": "field",
+          "optional": false
+        },
+        {
+          "name": "indexField",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::combine",
+      "signature": "Map::combine(keys: list, values: list): map",
+      "description": "Builds a map from equally sized lists, otherwise `RangeError`. Keys must be ints or strings, otherwise `TypeError`. Later duplicate keys overwrite values while retaining their first insertion position. Empty lists produce an empty map.",
+      "parameters": [
+        {
+          "name": "keys",
+          "optional": false
+        },
+        {
+          "name": "values",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::create",
+      "signature": "Map::create(): map",
+      "description": "Returns an empty map. `[]` continues to create an empty list. Add map entries with normal indexed assignment.",
+      "parameters": []
+    },
+    {
+      "name": "Map::diff",
+      "signature": "Map::diff(left: map, right: map): map",
+      "description": "Keeps left entries whose values are absent from right, using strict recursive equality. Preserves left keys and order.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::diffKeys",
+      "signature": "Map::diffKeys(left: map, right: map): map",
+      "description": "Keeps left entries whose exact typed keys are absent from right. Preserves left order.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::flip",
+      "signature": "Map::flip(items: map): map",
+      "description": "Exchanges values and keys. Input values must be ints or strings, otherwise `TypeError`. Duplicate generated keys use the same overwrite and insertion rule as combine.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::get",
+      "signature": "Map::get(items: map, key: int or string, default: any optional): any",
+      "description": "Returns a copy of an existing value, or the default if the key is absent. Omitted default is null. A stored null is returned as null, not replaced by the default. As in other calls, default arguments are evaluated eagerly even when the key exists.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "key",
+          "optional": false
+        },
+        {
+          "name": "default",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Map::has",
+      "signature": "Map::has(items: map, key: int or string): bool",
+      "description": "Tests whether the exact typed key exists, including keys whose value is null.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "key",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::intersect",
+      "signature": "Map::intersect(left: map, right: map): map",
+      "description": "Keeps left entries whose values occur in right, using strict recursive equality. Preserves left keys and order.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::intersectKeys",
+      "signature": "Map::intersectKeys(left: map, right: map): map",
+      "description": "Keeps left entries whose exact typed keys occur in right. Preserves left order.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::keys",
+      "signature": "Map::keys(items: map): list",
+      "description": "Returns the map's keys in insertion order, preserving each int/string type. An empty map returns `[]`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::merge",
+      "signature": "Map::merge(left: map, right: map): map",
+      "description": "Right values replace matching typed keys without moving their positions. New keys append in right order. Numeric keys are preserved.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::remove",
+      "signature": "Map::remove(items: map, key: int or string): map",
+      "description": "Returns a copy without that key, preserving the remaining entries' order. An absent key returns an unchanged copy, including for an empty map.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "key",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::replace",
+      "signature": "Map::replace(left: map, right: map): map",
+      "description": "Like merge, but ignores right keys absent from left.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::reverse",
+      "signature": "Map::reverse(items: map): map",
+      "description": "Reverses entry order while preserving typed keys.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::search",
+      "signature": "Map::search(items: map, value: any): int or string or null",
+      "description": "Returns the first strictly equal value's typed key in insertion order, or null when absent.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Map::values",
+      "signature": "Map::values(items: map): list",
+      "description": "Returns copies of values in insertion order. An empty map returns `[]`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::abs",
+      "signature": "Math::abs(value: int or float): int or float",
+      "description": "Absolute value. i64 minimum raises `ArithmeticError` because its positive value cannot fit in i64. Float negative zero becomes positive zero.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::ceil",
+      "signature": "Math::ceil(value: int or float): int or float",
+      "description": "Rounds toward positive infinity; ints are unchanged. `Math::ceil(-1.2)` returns float -1.0.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::floor",
+      "signature": "Math::floor(value: int or float): int or float",
+      "description": "Rounds toward negative infinity; ints are unchanged. `Math::floor(-1.2)` returns float -2.0.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::max",
+      "signature": "Math::max(left, right): int or float",
+      "description": "Larger of two ints or two finite floats. Equal values select the left argument, including signed zero.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::min",
+      "signature": "Math::min(left, right): int or float",
+      "description": "Smaller of two ints or two finite floats. Equal values select the left argument, including signed zero.",
+      "parameters": [
+        {
+          "name": "left",
+          "optional": false
+        },
+        {
+          "name": "right",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Math::round",
+      "signature": "Math::round(value: int or float): int or float",
+      "description": "Nearest integer, with halfway ties away from zero: 2.5 becomes 3.0 and -2.5 becomes -3.0. Ints are unchanged.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Password::hash",
+      "signature": "Password::hash(password: string): string",
+      "description": "Hash using Argon2id v19, a fresh 16-byte OS-random salt, and a 32-byte digest. Returns the complete PHC-format string.",
+      "parameters": [
+        {
+          "name": "password",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Password::needsRehash",
+      "signature": "Password::needsRehash(hash: string): bool",
+      "description": "True for malformed/unsupported hashes, or supported hashes whose costs, salt length, or digest length differ from the current generation policy. No password hashing is performed.",
+      "parameters": [
+        {
+          "name": "hash",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Password::verify",
+      "signature": "Password::verify(password: string, hash: string): bool",
+      "description": "Verify an Argon2id v19 hash using its bounded encoded parameters. Wrong passwords and malformed/unsupported hashes return false.",
+      "parameters": [
+        {
+          "name": "password",
+          "optional": false
+        },
+        {
+          "name": "hash",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::absolute",
+      "signature": "Path::absolute(path): string",
+      "description": "Resolves against the runtime directory, then lexically normalizes. The target need not exist.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::canonical",
+      "signature": "Path::canonical(path): string",
+      "description": "Resolve an existing filesystem path, following links under read/root policies.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::extension",
+      "signature": "Path::extension(path): string",
+      "description": "Last extension without dot. `.hidden` has no extension; `a.tar.gz` gives `gz`.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::filename",
+      "signature": "Path::filename(path): string",
+      "description": "Final filename component, or empty string if none.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::join",
+      "signature": "Path::join(...strings): string",
+      "description": "Joins zero or more native path components. An absolute later component replaces the previous path, following Rust path rules. Zero arguments returns empty string.",
+      "parameters": [
+        {
+          "name": "strings",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::normalize",
+      "signature": "Path::normalize(path): string",
+      "description": "Lexically removes `.` and collapses `..`, preserving leading relative `..` and stopping at absolute roots. Empty input normalizes to `.`.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Path::parent",
+      "signature": "Path::parent(path): string",
+      "description": "Lexical parent, or empty string if none (including a bare filename or root).",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Process::currentId",
+      "signature": "Process::currentId(): int",
+      "description": "Current Scripta host process ID.",
+      "parameters": []
+    },
+    {
+      "name": "Process::exists",
+      "signature": "Process::exists(pid): bool",
+      "description": "Requires a positive representable PID and reports whether it appears in a fresh process-inspection snapshot. OS visibility restrictions can make another user's process invisible.",
+      "parameters": [
+        {
+          "name": "pid",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Process::kill",
+      "signature": "Process::kill(handle)",
+      "description": "Requests forced termination, waits for cleanup, and returns the resulting status. A completed handle retains its original result.",
+      "parameters": [
+        {
+          "name": "handle",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Process::poll",
+      "signature": "Process::poll(handle)",
+      "description": "Returns null while pending; otherwise returns the result or raises the stored error.",
+      "parameters": [
+        {
+          "name": "handle",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Process::run",
+      "signature": "Process::run(command: string, arguments: list = [], options = []): ProcessResult",
+      "description": "Runs an executable with literal arguments and waits for its result. Does not invoke a shell.",
+      "parameters": [
+        {
+          "name": "command",
+          "optional": false
+        },
+        {
+          "name": "arguments",
+          "optional": true
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Process::shell",
+      "signature": "Process::shell(code: string, options = []): ProcessResult",
+      "description": "Executes shell code. Requires the process.shell capability.",
+      "parameters": [
+        {
+          "name": "code",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Process::spawn",
+      "signature": "Process::spawn(command: string, arguments: list = [], options = []): ProcessHandle",
+      "description": "Starts an executable with literal arguments and returns a process handle immediately.",
+      "parameters": [
+        {
+          "name": "command",
+          "optional": false
+        },
+        {
+          "name": "arguments",
+          "optional": true
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Process::wait",
+      "signature": "Process::wait(handle)",
+      "description": "Waits and returns a ProcessResult, or raises the stored launch-monitor error. Repeated waits retain the completed result.",
+      "parameters": [
+        {
+          "name": "handle",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Regex::findAll",
+      "signature": "Regex::findAll(text, pattern): list",
+      "description": "Full matched strings in left-to-right, nonoverlapping order; empty list for no match.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "pattern",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Regex::isMatch",
+      "signature": "Regex::isMatch(text, pattern): bool",
+      "description": "Whether the pattern matches anywhere in the text. Use anchors for a full-text match.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "pattern",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Regex::replace",
+      "signature": "Regex::replace(text, pattern, replacement): string",
+      "description": "Replaces all nonoverlapping matches with the literal replacement. `$1`, backslashes, and capture names have no special replacement meaning.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "pattern",
+          "optional": false
+        },
+        {
+          "name": "replacement",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Session::all",
+      "signature": "Session::all(): map",
+      "description": "Snapshot of all session fields in insertion order. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Session::close",
+      "signature": "Session::close(): null",
+      "description": "Commit immediately and release the record lock. Further session access fails. Later request errors do not undo this explicit early commit. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Session::destroy",
+      "signature": "Session::destroy(): null",
+      "description": "Stage deletion of server data and expiration of the session cookie. Further session access in this request fails. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Session::get",
+      "signature": "Session::get(key: string, default: any = null): any",
+      "description": "Stored value, including stored null; default only when the key is absent. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "key",
+          "optional": false
+        },
+        {
+          "name": "default",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Session::has",
+      "signature": "Session::has(key: string): bool",
+      "description": "Distinguishes an absent key from a stored null. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "key",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Session::id",
+      "signature": "Session::id(): string",
+      "description": "Current opaque 64-character lowercase hexadecimal ID. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Session::regenerate",
+      "signature": "Session::regenerate(): null",
+      "description": "Generate a fresh ID, preserving data; revoke the previous ID on commit. At most once per request. Call after successful authentication. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Session::remove",
+      "signature": "Session::remove(key: string): bool",
+      "description": "Remove a key; return whether it existed. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "key",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Session::set",
+      "signature": "Session::set(key: string, value: any): null",
+      "description": "Set/replace a value without moving an existing key's insertion position. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "key",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Session::start",
+      "signature": "Session::start(): null",
+      "description": "Resume a known, unexpired session or generate a new random one. Idempotent while open. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Socket::accept",
+      "signature": "Socket::accept(listener: SocketListener): ByteStream",
+      "description": "Accepts at most one connection. Reserves a handle slot before removing a connection from the queue. Accepted sockets inherit logical blocking mode, timeout, and transfer ceiling.",
+      "parameters": [
+        {
+          "name": "listener",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::bindDatagram",
+      "signature": "Socket::bindDatagram(address: string, port: int, options = []): DatagramSocket",
+      "description": "Binds unconnected UDP; port 0 is allowed.",
+      "parameters": [
+        {
+          "name": "address",
+          "optional": false
+        },
+        {
+          "name": "port",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Socket::close",
+      "signature": "Socket::close(socket): null",
+      "description": "Shared, idempotent close for TCP/UDP/listeners; no I/O capability needed for cleanup.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::connect",
+      "signature": "Socket::connect(address: string, port: int, options = []): ByteStream",
+      "description": "Connects TCP to a literal IP and port 1–65535. Handshake is a bounded blocking backend call, then I/O honors the logical blocking mode.",
+      "parameters": [
+        {
+          "name": "address",
+          "optional": false
+        },
+        {
+          "name": "port",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Socket::getOption",
+      "signature": "Socket::getOption(socket, name: string): bool or int",
+      "description": "Returns the OS-reported option, which may differ from the requested buffer size.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "name",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::listen",
+      "signature": "Socket::listen(address: string, port: int, options = []): SocketListener",
+      "description": "Binds and listens in one operation; port 0 chooses an ephemeral port.",
+      "parameters": [
+        {
+          "name": "address",
+          "optional": false
+        },
+        {
+          "name": "port",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Socket::localAddress",
+      "signature": "Socket::localAddress(socket): map",
+      "description": "`address` and `port` of the bound endpoint.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::peerAddress",
+      "signature": "Socket::peerAddress(socket): map",
+      "description": "Connected TCP/UDP peer; errors for listeners and unconnected UDP.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::poll",
+      "signature": "Socket::poll(read: list, write: list, milliseconds: int): map",
+      "description": "Returns `readable`/`writable` lists of ready handles; unique results preserve each input list's order. Zero timeout probes immediately; EOF/error readiness is included. Requires at least one socket.",
+      "parameters": [
+        {
+          "name": "read",
+          "optional": false
+        },
+        {
+          "name": "write",
+          "optional": false
+        },
+        {
+          "name": "milliseconds",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::read",
+      "signature": "Socket::read(socket: ByteStream, length: int): bytes or null",
+      "description": "TCP read with the same binary/short-read/EOF rules as `Stream::read`.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::receive",
+      "signature": "Socket::receive(socket: DatagramSocket, length: int): map",
+      "description": "One UDP packet, preserving empty packets and reporting sender/truncation; same result as `Stream::receive`.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::sendTo",
+      "signature": "Socket::sendTo(socket: DatagramSocket, data: bytes, address: string, port: int): int",
+      "description": "One packet to a literal peer from an unconnected bound UDP socket. Connected UDP uses `Stream::send`.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "data",
+          "optional": false
+        },
+        {
+          "name": "address",
+          "optional": false
+        },
+        {
+          "name": "port",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::setBlocking",
+      "signature": "Socket::setBlocking(socket, blocking: bool): null",
+      "description": "Sets logical blocking behavior, shared by aliases.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "blocking",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::setOption",
+      "signature": "Socket::setOption(socket, name: string, value): null",
+      "description": "Supported runtime options below; strict types.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::setTimeout",
+      "signature": "Socket::setTimeout(socket, milliseconds: int): null",
+      "description": "Sets a positive operation timeout within the host ceiling.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "milliseconds",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::shutdown",
+      "signature": "Socket::shutdown(socket: ByteStream, direction: string): null",
+      "description": "TCP half/full shutdown: `read`, `write`, or `both`. Does not close the handle or release its slot.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "direction",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Socket::write",
+      "signature": "Socket::write(socket: ByteStream, data: bytes): int",
+      "description": "TCP write returning actual bytes written; finish short writes explicitly.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "data",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Sqlite::close",
+      "signature": "Sqlite::close(db: SqliteDatabase): null",
+      "description": "Closes the connection and releases locks. Repeated closes succeed. Subsequent execute/query calls fail. Requires a build with SQLite enabled (included by default).",
+      "parameters": [
+        {
+          "name": "db",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Sqlite::execute",
+      "signature": "Sqlite::execute(db: SqliteDatabase, sql: string, params: list optional): int",
+      "description": "Executes one statement that returns no columns. Returns the directly affected row count for DML, excluding trigger changes; DDL and transaction statements return zero. Parameters default to `[]`. Requires a build with SQLite enabled (included by default).",
+      "parameters": [
+        {
+          "name": "db",
+          "optional": false
+        },
+        {
+          "name": "sql",
+          "optional": false
+        },
+        {
+          "name": "params",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Sqlite::open",
+      "signature": "Sqlite::open(path: string, readOnly: bool optional, busyTimeoutMs: int optional): SqliteDatabase",
+      "description": "Opens a file database, creating it if needed in writable mode, or opens a private `:memory:` database. Defaults: `readOnly = false`, `busyTimeoutMs = 1000`. The busy timeout must be between 0 and 5000 ms. Requires a build with SQLite enabled (included by default).",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        },
+        {
+          "name": "readOnly",
+          "optional": true
+        },
+        {
+          "name": "busyTimeoutMs",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Sqlite::query",
+      "signature": "Sqlite::query(db: SqliteDatabase, sql: string, params: list optional): list",
+      "description": "Executes one read-only statement returning columns. Returns a list of maps keyed by column name, including `[]` for no rows. Parameters default to `[]`. Requires a build with SQLite enabled (included by default).",
+      "parameters": [
+        {
+          "name": "db",
+          "optional": false
+        },
+        {
+          "name": "sql",
+          "optional": false
+        },
+        {
+          "name": "params",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Stream::close",
+      "signature": "Stream::close(stream): null",
+      "description": "Closes shared handle state. Idempotent for an owned handle; aliases also become closed. Requires ownership, but no I/O capability for cleanup.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::copy",
+      "signature": "Stream::copy(source: ByteStream, destination: ByteStream, maxBytes: int): int",
+      "description": "Copies up to a bounded count using at most 64 KiB chunks, completing short writes. Rejects the same handle. Validates count against both handles' remaining transfer budgets before I/O.",
+      "parameters": [
+        {
+          "name": "source",
+          "optional": false
+        },
+        {
+          "name": "destination",
+          "optional": false
+        },
+        {
+          "name": "maxBytes",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::eof",
+      "signature": "Stream::eof(stream: ByteStream): bool",
+      "description": "True after a positive read observes EOF. A short nonempty read does not establish EOF.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::flush",
+      "signature": "Stream::flush(stream): null",
+      "description": "Flushes a writable file/TCP handle; UDP is a no-op. Read-only HTTP/input handles reject it. Does not flush script output buffers or guarantee durable disk storage.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::open",
+      "signature": "Stream::open(uri: string, mode: string optional, options = []): ByteStream or DatagramSocket",
+      "description": "Opens a file, HTTP response body, or connected transport. Default mode is `r` for files/HTTP, `rw` for TCP/UDP.",
+      "parameters": [
+        {
+          "name": "uri",
+          "optional": false
+        },
+        {
+          "name": "mode",
+          "optional": true
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Stream::read",
+      "signature": "Stream::read(stream: ByteStream, length: int): bytes or null",
+      "description": "Reads up to the requested count; short reads are valid. Positive reads return null only at EOF. Zero length returns empty bytes without consuming input or changing EOF.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::receive",
+      "signature": "Stream::receive(socket: DatagramSocket, length: int): map",
+      "description": "Receives exactly one packet and returns `data: bytes`, `address: string` (source IP), `port: int`, and `truncated: bool`. Keeps at most length bytes and discards the remainder of that packet. Empty packets remain ordinary results.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::request",
+      "signature": "Stream::request(method: string, url: string, source: ByteStream, options = []): ByteStream",
+      "description": "Sends an incrementally consumed **readable file or request-input stream** as an HTTP request body, returning a readable HTTP response stream. Source is not closed on success.",
+      "parameters": [
+        {
+          "name": "method",
+          "optional": false
+        },
+        {
+          "name": "url",
+          "optional": false
+        },
+        {
+          "name": "source",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Stream::seek",
+      "signature": "Stream::seek(stream: ByteStream, offset: int, origin: string = \"start\"): int",
+      "description": "File-only seek; `start` uses nonnegative offsets, `current`/`end` accept signed offsets. Returns the new position and clears EOF.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        },
+        {
+          "name": "offset",
+          "optional": false
+        },
+        {
+          "name": "origin",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Stream::send",
+      "signature": "Stream::send(socket: DatagramSocket, data: bytes): int",
+      "description": "Sends exactly one UDP datagram, including a zero-length packet.",
+      "parameters": [
+        {
+          "name": "socket",
+          "optional": false
+        },
+        {
+          "name": "data",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::tell",
+      "signature": "Stream::tell(stream: ByteStream): int",
+      "description": "File-only current position; does not change EOF.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Stream::write",
+      "signature": "Stream::write(stream: ByteStream, data: bytes): int",
+      "description": "Writes up to one bounded chunk; returns the actual count, possibly short. Call again for unwritten bytes. Strings require `Bytes::encodeUtf8`.",
+      "parameters": [
+        {
+          "name": "stream",
+          "optional": false
+        },
+        {
+          "name": "data",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::contains",
+      "signature": "String::contains(text: string, search: string): bool",
+      "description": "True when the literal search occurs anywhere in text. An empty search returns true, including in empty text.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "search",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::endsWith",
+      "signature": "String::endsWith(text: string, search: string): bool",
+      "description": "True when text ends with the literal search. An empty search returns true.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "search",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::format",
+      "signature": "String::format(template: string, values: list): string",
+      "description": "Replaces sequential `{}` placeholders with scalar display. `{{` and `}}` emit literal braces. See the formatting contract below.",
+      "parameters": [
+        {
+          "name": "template",
+          "optional": false
+        },
+        {
+          "name": "values",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::graphemeLength",
+      "signature": "String::graphemeLength(text: string): int",
+      "description": "Counts extended Unicode grapheme clusters.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::graphemeSubstring",
+      "signature": "String::graphemeSubstring(text: string, start: int, length: int optional): string",
+      "description": "Extracts text using nonnegative grapheme cluster positions. Omitted length returns the suffix.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "start",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "String::join",
+      "signature": "String::join(items: list, separator: string): string",
+      "description": "Joins a list containing only strings. Empty input returns `\"\"`, one item returns that item, and an empty separator concatenates items. Non-string elements raise `TypeError`.",
+      "parameters": [
+        {
+          "name": "items",
+          "optional": false
+        },
+        {
+          "name": "separator",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::lower",
+      "signature": "String::lower(text: string): string",
+      "description": "Applies locale-independent Unicode lowercase, including contextual Greek final sigma. Empty input returns `\"\"`. Mappings can expand a scalar, such as `İ` becoming `i` plus a combining dot.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::replace",
+      "signature": "String::replace(text: string, search: string, replacement: string): string",
+      "description": "Replaces all literal, nonoverlapping matches from left to right. Replacement text is not searched again. No match returns the original text's value; an empty replacement deletes matches. An empty search raises `RangeError`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "search",
+          "optional": false
+        },
+        {
+          "name": "replacement",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::split",
+      "signature": "String::split(text: string, separator: string): list",
+      "description": "Splits on literal, nonoverlapping separators and preserves leading, trailing, and consecutive empty fields. Empty text returns `[\"\"]`; no match returns `[text]`. An empty separator raises `RangeError`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "separator",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::startsWith",
+      "signature": "String::startsWith(text: string, search: string): bool",
+      "description": "True when text begins with the literal search. An empty search returns true.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "search",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::substring",
+      "signature": "String::substring(text: string, start: int, length: int optional): string",
+      "description": "Takes nonnegative Unicode scalar positions. Omitted length returns the suffix. Start beyond `len(text)`, negative offsets, or length beyond the remaining text raise `RangeError`. Start at the end is valid with omitted length or length zero. Empty text accepts start zero with omitted length or length zero. Explicit null is not an omitted length.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        },
+        {
+          "name": "start",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "String::trim",
+      "signature": "String::trim(text: string): string",
+      "description": "Removes Unicode whitespace from both ends, preserving interior whitespace. Empty or all-whitespace input returns `\"\"`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "String::upper",
+      "signature": "String::upper(text: string): string",
+      "description": "Applies locale-independent Unicode uppercase. Empty input returns `\"\"`. Mappings can expand scalars, such as `ß` becoming `SS`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "System::architecture",
+      "signature": "System::architecture(): string",
+      "description": "Returns the compiled target architecture, such as aarch64 or x86_64.",
+      "parameters": []
+    },
+    {
+      "name": "System::cpuUsage",
+      "signature": "System::cpuUsage(intervalMs = 200): float",
+      "description": "Blocking system-wide average CPU utilization from two counter observations, normalized across logical CPUs to 0–100 percent.",
+      "parameters": [
+        {
+          "name": "intervalMs",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "System::diskUsage",
+      "signature": "System::diskUsage(path): DiskUsage",
+      "description": "Capacity of the filesystem containing an existing file/directory. Relative paths use runtime cwd. Requires `filesystem.read` and respects the host root policy.",
+      "parameters": [
+        {
+          "name": "path",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "System::homeDirectory",
+      "signature": "System::homeDirectory(): string",
+      "description": "Native current user's home directory, using Rust's OS/environment lookup.",
+      "parameters": []
+    },
+    {
+      "name": "System::hostname",
+      "signature": "System::hostname(): string",
+      "description": "Native hostname; unavailable/empty results raise `UnsupportedError`.",
+      "parameters": []
+    },
+    {
+      "name": "System::memoryUsage",
+      "signature": "System::memoryUsage(): MemoryUsage",
+      "description": "Physical **system RAM**, not this process's resident/virtual memory, swap, or container memory limit.",
+      "parameters": []
+    },
+    {
+      "name": "System::platform",
+      "signature": "System::platform(): string",
+      "description": "Returns the target OS identifier, such as linux, macos, or windows.",
+      "parameters": []
+    },
+    {
+      "name": "System::tempDirectory",
+      "signature": "System::tempDirectory(): string",
+      "description": "Rust's native temporary directory selection. Does not create or guarantee writability of the directory.",
+      "parameters": []
+    },
+    {
+      "name": "System::uptime",
+      "signature": "System::uptime(): int",
+      "description": "Whole seconds since OS boot, not runtime/process age. Zero/unavailable results raise `UnsupportedError`.",
+      "parameters": []
+    },
+    {
+      "name": "Url::buildQuery",
+      "signature": "Url::buildQuery(parameters): string",
+      "description": "Encodes names/values and joins them with `&` and `=`, without a leading `?`.",
+      "parameters": [
+        {
+          "name": "parameters",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Url::decodeComponent",
+      "signature": "Url::decodeComponent(text: string): string",
+      "description": "Decodes percent escapes once; literal `+` remains `+`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Url::encodeComponent",
+      "signature": "Url::encodeComponent(text: string): string",
+      "description": "Percent-encodes UTF-8 bytes, leaving only ASCII letters, digits, and `-._~` unchanged. Spaces become `%20`; literal `+` becomes `%2B`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Url::parseQuery",
+      "signature": "Url::parseQuery(text: string): list",
+      "description": "Parses a query into ordered two-string pairs, optionally removing one leading `?`. Literal `+` remains `+`.",
+      "parameters": [
+        {
+          "name": "text",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Web::addHeader",
+      "signature": "Web::addHeader(name: string, value: string): null",
+      "description": "Appends a header, preserving repeated values such as `Set-Cookie`. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Web::cookie",
+      "signature": "Web::cookie(name: string, value: string, options = []): null",
+      "description": "Appends a validated Set-Cookie header; UTF-8 values are percent-encoded. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Web::deleteCookie",
+      "signature": "Web::deleteCookie(name: string, options = []): null",
+      "description": "Appends a deletion cookie for the chosen path/domain. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Web::download",
+      "signature": "Web::download(source: ByteStream, filename: string): int",
+      "description": "Streams a readable file from its current position as an attachment. Returns bytes written (zero for HEAD). Requires no prior body output or active application buffers. See file transfers. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "source",
+          "optional": false
+        },
+        {
+          "name": "filename",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Web::header",
+      "signature": "Web::header(name: string, value: string): null",
+      "description": "Replaces all headers with this case-insensitive name. Does not change status automatically. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "name",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Web::redirect",
+      "signature": "Web::redirect(location: string, status: int = 302): null",
+      "description": "Replaces `Location` and sets 301, 302, 303, 307, or 308. Does not stop execution; follow with `exit 0`. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "location",
+          "optional": false
+        },
+        {
+          "name": "status",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "Web::request",
+      "signature": "Web::request(): WebRequest",
+      "description": "Returns this request's read-only object. Available only in a web request context.",
+      "parameters": []
+    },
+    {
+      "name": "Web::status",
+      "signature": "Web::status(code: int): null",
+      "description": "Sets status 200–599; defaults to 200. Informational responses are not supported. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "code",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "Web::write",
+      "signature": "Web::write(value: string or bytes): null",
+      "description": "Appends UTF-8 or arbitrary bytes to the bounded response body. `echo` also writes the body, with its usual strict types. Available only in a web request context.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "bool",
+      "signature": "bool(value): bool",
+      "description": "Bool is unchanged; numeric 0/1 become false/true; exactly `\"false\"`/`\"true\"` become false/true. Other values are errors.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "float",
+      "signature": "float(value): float",
+      "description": "Finite floats are unchanged; ints convert to f64 (large values may round); bool becomes 0.0/1.0; strings must parse as finite floating-point numbers without whitespace.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "flush",
+      "signature": "flush(): null",
+      "description": "Request a flush of the underlying host writer. Does not drain application buffers.",
+      "parameters": []
+    },
+    {
+      "name": "int",
+      "signature": "int(value): int",
+      "description": "Int is unchanged; bool becomes 0/1; a finite integral float within i64 range is converted exactly; strings must parse as signed decimal i64 without whitespace or fractional/exponent notation.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "len",
+      "signature": "len(value): int",
+      "description": "Counts Unicode scalar values in a string (not bytes or grapheme clusters), bytes in a byte value, or entries in a list/map. Other values are errors.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "ob_clean",
+      "signature": "ob_clean(): null",
+      "description": "Discard the top buffer's bytes, keeping it active.",
+      "parameters": []
+    },
+    {
+      "name": "ob_end_clean",
+      "signature": "ob_end_clean(): null",
+      "description": "Discard and remove the top buffer.",
+      "parameters": []
+    },
+    {
+      "name": "ob_end_flush",
+      "signature": "ob_end_flush(): null",
+      "description": "Drain and remove the top buffer.",
+      "parameters": []
+    },
+    {
+      "name": "ob_flush",
+      "signature": "ob_flush(): null",
+      "description": "Drain the top buffer into its parent (or host writer), leaving it active and empty.",
+      "parameters": []
+    },
+    {
+      "name": "ob_get_clean",
+      "signature": "ob_get_clean(): bytes",
+      "description": "Copy then discard/remove the top buffer.",
+      "parameters": []
+    },
+    {
+      "name": "ob_get_contents",
+      "signature": "ob_get_contents(): bytes or null",
+      "description": "Copy the top buffer; null when no buffer exists.",
+      "parameters": []
+    },
+    {
+      "name": "ob_get_flush",
+      "signature": "ob_get_flush(): bytes",
+      "description": "Copy then drain/remove the top buffer.",
+      "parameters": []
+    },
+    {
+      "name": "ob_get_length",
+      "signature": "ob_get_length(): int or null",
+      "description": "Top buffer's byte length, or null without a buffer.",
+      "parameters": []
+    },
+    {
+      "name": "ob_get_level",
+      "signature": "ob_get_level(): int",
+      "description": "Number of active application buffers.",
+      "parameters": []
+    },
+    {
+      "name": "ob_start",
+      "signature": "ob_start(): null",
+      "description": "Push an empty application buffer.",
+      "parameters": []
+    },
+    {
+      "name": "sleep",
+      "signature": "sleep(milliseconds): null",
+      "description": "Requires a nonnegative int duration in milliseconds and the `sleep` capability, allowed by default. Zero returns immediately; long sleeps check cancellation in chunks of at most 10 ms of requested sleep. OS scheduling can delay observation.",
+      "parameters": [
+        {
+          "name": "milliseconds",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "str",
+      "signature": "str(value): string",
+      "description": "Null becomes `\"null\"`; bool becomes `\"true\"`/`\"false\"`; int and finite float use decimal display; strings are unchanged.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    },
+    {
+      "name": "type",
+      "signature": "type(value): string",
+      "description": "Returns `null`, `bool`, `int`, `float`, `string`, `bytes`, `list`, `map`, or `callable`. Native objects return their host-defined type name.",
+      "parameters": [
+        {
+          "name": "value",
+          "optional": false
+        }
+      ]
+    }
+  ]
+}

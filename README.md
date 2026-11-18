@@ -22,6 +22,26 @@ Snippets: `scripta`, `scriptamain` (also `scr`, `scrmain`), `fn`, `if`, `ifelse`
 `while`, `try`, `echo`, and `require`. Use **Insert Snippet** or completion to
 insert one. The script snippets are intended for empty files.
 
+## Basic IntelliSense
+
+Start typing a built-in name, or press **Ctrl+Space**, to see function and keyword
+suggestions. After a module prefix such as `String::` or `File::`, suggestions show
+that module's functions. Accepting a function inserts a call with editable
+placeholders for required arguments; use **Tab** to move between them. Optional
+arguments remain visible in the signature and can be added manually. Existing
+call parentheses are preserved.
+
+Hover over a built-in name to see its signature and description. The bundled
+catalog covers 226 global and module functions, including SQLite and the
+request-only Web/Session APIs, whose availability is noted in their descriptions.
+Suggestions are suppressed inside strings and comments, after `$` and `->`, and
+when naming declarations. Existing snippets remain available.
+
+Completion and hover work in unsaved documents and Restricted Mode without a
+Scripta runtime installed. The catalog is static: it does not inspect your runtime
+version or project. Project variables, user-defined functions, member completion,
+go to definition, and parameter hints while typing a call are not included.
+
 ## Install locally
 
 To rebuild the package in `dist/`, run this from the project root (requires Python 3):
@@ -68,8 +88,8 @@ does not recursively check dependencies or perform full static type checking.
 Run and Check save modified files first and offer Save As for an untitled
 Scripta document. These features require a trusted workspace and files on disk;
 remote workspaces use the runtime installed on the remote host. Highlighting
-and snippets work without `scripta` and in Restricted Mode. IntelliSense
-and debugging are not included.
+and snippets, basic completion, and hover work without `scripta` and in Restricted
+Mode. Debugging is not included.
 
 ## Format source code
 
@@ -124,6 +144,13 @@ Tests use VS Code's TextMate and Oniguruma engines to check actual token scopes,
 including multiline state and escaped quotes. They also expand snippet defaults
 and can validate them with the runtime when `SCRIPTA_BIN` is set to its executable (`SCR_BIN` remains supported).
 
+Built-in completion and hover share `src/builtins.json`. Its source revision and
+reference paths are recorded in the file. When updating it, verify names,
+signatures, descriptions, and optional parameters against the runtime's
+`docs/standard-library.md`, `docs/sqlite.md`, and native registrations. Keywords
+come from `crates/scr-lexer/src/lib.rs`. No runtime source checkout is needed to
+use or package the extension.
+
 For packaging without npm dependencies, Python 3 can create the local-install
 VSIX with `python3 scripts/package.py`. Marketplace publishing is a separate step;
 verify the publisher identity and repository URL before publishing.
@@ -131,6 +158,6 @@ verify the publisher identity and repository URL before publishing.
 An editor smoke test is available in `tests/vscode`. With an isolated VS Code
 profile, set `SCRIPTA_BIN` and launch VS Code with `--extensionDevelopmentPath` set
 to this repository and `--extensionTestsPath` set to `tests/vscode` (both absolute
-paths). The test checks language recognition, actual diagnostics, saving, and
-running a terminal task. Use a separate `--user-data-dir` and `--extensions-dir`
+paths). The test checks language recognition, completion and hover, actual
+diagnostics, saving, and running a terminal task. Use a separate `--user-data-dir` and `--extensions-dir`
 for this test; it temporarily changes that profile's Scripta settings.

@@ -22,6 +22,17 @@ exports.run = async function () {
     const extension = vscode.extensions.getExtension('trafficinc.scripta-language-support');
     assert.ok(extension);
     await extension.activate();
+    const completionDocument = await vscode.workspace.openTextDocument({ language: 'scripta',
+      content: '<?scripta\nString::tr\nlen($items);' });
+    const completions = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider',
+      completionDocument.uri, new vscode.Position(1, 10), ':');
+    const trim = completions.items.find(item => (typeof item.label === 'string' ? item.label : item.label.label) === 'trim');
+    assert.ok(trim, 'Module completion includes trim in an untitled document');
+    assert.ok(trim.insertText instanceof vscode.SnippetString);
+    assert.match(trim.insertText.value, /^trim\(/);
+    const hovers = await vscode.commands.executeCommand('vscode.executeHoverProvider',
+      completionDocument.uri, new vscode.Position(2, 1));
+    assert.ok(hovers.some(hover => hover.contents.some(content => content.value.includes('Unicode scalar'))));
     await vscode.commands.executeCommand('scripta.checkFile');
     const errors = vscode.languages.getDiagnostics(uri).filter(d => d.source === 'scripta');
     assert.equal(errors.length, 1);
@@ -44,7 +55,7 @@ exports.run = async function () {
     assert.equal(document.isDirty, false);
     await vscode.commands.executeCommand('scripta.checkFile');
     assert.equal(vscode.languages.getDiagnostics(uri).filter(d => d.source === 'scripta').length, 0);
-    console.log('Scripta editor smoke test passed: language, diagnostics, save, run task, clean recheck.');
+    console.log('Scripta editor smoke test passed: language, completion, hover, diagnostics, save, run task, clean recheck.');
   } finally {
     await configuration.update('executablePath', undefined, vscode.ConfigurationTarget.Global);
     await configuration.update('checkOnSave', undefined, vscode.ConfigurationTarget.Global);
