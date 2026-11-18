@@ -1,0 +1,71 @@
+name: Build VSIX
+run-name: Build VSIX v${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Extension version, e.g. 0.5.0 (no v prefix)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Apply the entered version to this build
+        env:
+          BUILD_VERSION: ${{ inputs.version }}
+        run: python3 scripts/release.py prepare --version "$BUILD_VERSION"
+
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - name: Test build and release verification
+        run: python3 -m unittest discover -s tests -p '*_test.py'
+      - run: npm run package
+
+      - name: Record build identity and checksum
+        id: package
+        env:
+          BUILD_COMMIT: ${{ github.sha }}
+          BUILD_RUN_ID: ${{ github.run_id }}
+          BUILD_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: python3 scripts/release.py manifest
+
+      - name: Save the release-ready build
+        id: artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: vsix-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            dist/${{ steps.package.outputs.filename }}
+            dist/build.json
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Show how to release this build
+        env:
+          VERSION: ${{ steps.package.outputs.version }}
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+        run: |
+          {
+            echo "## VSIX $VERSION is ready"
+            echo "Build run ID: **$GITHUB_RUN_ID**"
+            echo "Source commit: \`$GITHUB_SHA\`"
+            echo "[Saved build]($ARTIFACT_URL)"
+            echo "Run **Create release from build** with build run ID **$GITHUB_RUN_ID**. No download or upload is needed."
+          } >> "$GITHUB_STEP_SUMMARY"

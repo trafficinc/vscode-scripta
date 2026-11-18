@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add manual GitHub builds with an entered version and releases promoted from the saved VSIX artifact.
+- Create the output directory before packaging so builds work from a fresh checkout.
 - Remove deprecated opening and closing tags from snippets, examples, recognition, highlighting, documentation, and the README banner.
 - Use a PNG README banner so standard VSIX packaging succeeds.
 - Explain the open-folder requirement for Run in empty windows; launch editor smoke tests in an isolated workspace.

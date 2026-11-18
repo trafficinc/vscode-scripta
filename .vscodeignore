@@ -1,4 +1,5 @@
 .vscode/**
+.github/**
 tests/**
 scripts/**
 node_modules/**

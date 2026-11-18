@@ -21,12 +21,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/trafficinc/scripta-vscode.git"
+    "url": "https://github.com/trafficinc/vscode-scripta.git"
   },
   "scripts": {
     "test": "node --test",
     "test:editor": "node scripts/editor-smoke.cjs",
-    "package": "vsce package --out dist/"
+    "package": "node -e \"require('node:fs').mkdirSync('dist', { recursive: true })\" && vsce package --out dist/"
   },
   "contributes": {
     "configurationDefaults": {

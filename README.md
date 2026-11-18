@@ -42,6 +42,12 @@ Scripta runtime installed. The catalog is static: it does not inspect your runti
 version or project. Project variables, user-defined functions, member completion,
 go to definition, and parameter hints while typing a call are not included.
 
+## Install a release
+
+Download the `.vsix` file from the repository's
+[Releases page](https://github.com/trafficinc/vscode-scripta/releases).
+In VS Code, open **Extensions → ⋯ → Install from VSIX…** and select that file.
+
 ## Install locally
 
 To rebuild the package in `dist/`, run this from the project root (requires Python 3):
@@ -131,10 +137,13 @@ or formatter failures leave the buffer unchanged; details appear in
 With Node.js 22+ and npm:
 
 ```sh
-npm install
+npm ci
 npm test
 npm run package
 ```
+
+Run build/release validation tests with
+`python3 -m unittest discover -s tests -p '*_test.py'`.
 
 Open this folder in VS Code and press **F5** to launch an Extension Development
 Host with `examples/highlighting.scripta`. Check colors in a light and dark theme,
@@ -170,3 +179,33 @@ workspace is required because VS Code rejects terminal tasks with another workin
 directory in an empty window. On macOS the launcher uses the standard application
 path; elsewhere it uses `code` on PATH. Set `VSCODE_BIN` to the VS Code executable
 if yours is elsewhere (on Windows, use the application `.exe`, not `code.cmd`).
+
+## Build and release from GitHub
+
+After these workflows are on the repository's default branch, everything can be
+done in GitHub; no local downloads, uploads, or version edits are needed.
+
+1. Open **Actions → Build VSIX → Run workflow**. Select the branch to build and
+   enter a version such as `0.5.0` (three numbers, without `v`). The build applies
+   it to the package and install instructions without committing changes, installs
+   the locked dependencies, runs the automated tests, and packages the VSIX.
+2. Open the successful run's summary and copy its **build run ID**. Builds are
+   retained for 90 days, subject to the repository's artifact retention limit.
+3. Open **Actions → Create release from build → Run workflow**. Use the default
+   branch for this workflow, paste the build run ID, choose `release`, `prerelease`,
+   or `draft`, and optionally enter release notes. The version comes from the
+   saved build, so there is no second version to enter.
+4. The workflow verifies the build and creates `v0.5.0` at the build's source
+   commit, attaching the original VSIX, checksums, and build metadata. Release
+   notes include installation steps and a link to the build. It does not rebuild
+   the extension or publish it to the VS Code Marketplace.
+
+Failed builds, expired artifacts, changed checksums, mismatched versions/source
+metadata, and existing version tags/releases are rejected. A failed upload leaves
+a draft for inspection; delete that draft before retrying the release workflow.
+If its tag also exists, remove the unused tag or build a new version.
+
+GitHub's built-in workflow token handles releases; no publisher token or personal
+access token is needed. Repository or organization policies must permit Actions
+to write releases. Runtime-dependent tests remain optional unless `SCRIPTA_BIN`
+is configured; the GitHub build runs the tests that do not need the runtime.

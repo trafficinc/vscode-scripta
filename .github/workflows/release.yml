@@ -1,0 +1,127 @@
+name: Create release from build
+run-name: Release build ${{ inputs.build_run_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: 'Successful Build VSIX run ID (shown in its summary or URL)'
+        required: true
+        type: string
+      release_type:
+        description: 'Release visibility'
+        required: true
+        default: release
+        type: choice
+        options:
+          - release
+          - prerelease
+          - draft
+      notes:
+        description: 'Optional release notes (installation steps and build details are added automatically)'
+        required: false
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: create-vsix-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Use the release workflow's code, never execute code from the selected artifact.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Validate the selected build
+        id: build
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        with:
+          script: |
+            const runId = process.env.BUILD_RUN_ID;
+            if (!/^[1-9][0-9]*$/.test(runId)) throw new Error('Enter a numeric build run ID.');
+            const { data: run } = await github.rest.actions.getWorkflowRun({ ...context.repo, run_id: runId });
+            const { data: workflow } = await github.rest.actions.getWorkflow({ ...context.repo, workflow_id: run.workflow_id });
+            if (workflow.path !== '.github/workflows/build.yml' || run.event !== 'workflow_dispatch'
+                || run.status !== 'completed' || run.conclusion !== 'success'
+                || run.head_repository?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+              throw new Error('Select a completed, successful Build VSIX run from this repository.');
+            }
+            const name = `vsix-${run.id}-${run.run_attempt}`;
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts,
+              { ...context.repo, run_id: runId, per_page: 100 });
+            if (!artifacts.some(artifact => artifact.name === name && !artifact.expired)) {
+              throw new Error('The selected build artifact is missing or expired. Run a new build.');
+            }
+            core.setOutput('artifact', name);
+            core.setOutput('commit', run.head_sha);
+            core.setOutput('attempt', String(run.run_attempt));
+
+      - name: Download the saved VSIX build
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: ${{ steps.build.outputs.artifact }}
+          run-id: ${{ inputs.build_run_id }}
+          github-token: ${{ github.token }}
+          path: release-artifact
+
+      - name: Verify the VSIX version, checksum, and source
+        id: package
+        env:
+          BUILD_COMMIT: ${{ steps.build.outputs.commit }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+          BUILD_RUN_ATTEMPT: ${{ steps.build.outputs.attempt }}
+        run: python3 scripts/release.py verify --directory release-artifact
+
+      - name: Publish the saved build as a GitHub release
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          VERSION: ${{ steps.package.outputs.version }}
+          VSIX_FILENAME: ${{ steps.package.outputs.filename }}
+          BUILD_COMMIT: ${{ steps.build.outputs.commit }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          RELEASE_NOTES: ${{ inputs.notes }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const tag = `v${process.env.VERSION}`;
+            try {
+              await github.rest.git.getRef({ ...context.repo, ref: `tags/${tag}` });
+              throw new Error(`Tag ${tag} already exists. Build a new version.`);
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            try {
+              await github.rest.repos.getReleaseByTag({ ...context.repo, tag });
+              throw new Error(`Release ${tag} already exists. Build a new version.`);
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            const buildUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.BUILD_RUN_ID}`;
+            const body = [process.env.RELEASE_NOTES,
+              `Download **${process.env.VSIX_FILENAME}**, then in VS Code choose **Extensions → ⋯ → Install from VSIX…** and select the file.`,
+              `Built from commit ${process.env.BUILD_COMMIT}. [Original build](${buildUrl}).`,
+              'The VSIX is the original build artifact; it was not rebuilt for this release.'].filter(Boolean).join('\n\n');
+            // Upload everything to a draft first, so public releases always have their assets.
+            const { data: release } = await github.rest.repos.createRelease({ ...context.repo,
+              tag_name: tag, target_commitish: process.env.BUILD_COMMIT, name: `Scripta ${tag}`,
+              body, draft: true, prerelease: process.env.RELEASE_TYPE === 'prerelease' });
+            for (const name of [process.env.VSIX_FILENAME, 'SHA256SUMS', 'build.json']) {
+              const data = fs.readFileSync(`release-artifact/${name}`);
+              await github.rest.repos.uploadReleaseAsset({ ...context.repo, release_id: release.id,
+                name, data, headers: { 'content-type': 'application/octet-stream', 'content-length': data.length } });
+            }
+            if (process.env.RELEASE_TYPE !== 'draft') {
+              await github.rest.repos.updateRelease({ ...context.repo, release_id: release.id, draft: false });
+            }
+            await core.summary.addHeading(`Scripta ${tag}`).addLink('Open release', release.html_url).write();
