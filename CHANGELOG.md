@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Remove deprecated opening and closing tags from snippets, examples, recognition, highlighting, documentation, and the README banner.
 - Use a PNG README banner so standard VSIX packaging succeeds.
 - Explain the open-folder requirement for Run in empty windows; launch editor smoke tests in an isolated workspace.
 - Add built-in and keyword completion, with module suggestions after `::` and required argument placeholders.
@@ -17,11 +18,11 @@
 ## 0.3.0
 
 - Recognize official `.scripta` files and shorthand `.scta` files.
-- Highlight `<?scripta` and detect `scripta` shebangs.
+- Detect `scripta` shebangs.
 - Default Run and Check to the `scripta` executable.
 - Update script snippets, examples, documentation, and packaging to canonical names.
 - Remove the legacy `.scr` file association.
-- Keep legacy `<?scr`, `scr` shebangs, and snippet prefixes compatible.
+- Keep legacy `scr` shebangs and snippet prefixes compatible.
 
 ## 0.2.0
 
@@ -34,7 +35,7 @@
 
 ## 0.1.0
 
-- Recognize `.scr` files, Scripta shebangs, and opening tags.
+- Recognize `.scr` files and Scripta shebangs.
 - Add syntax highlighting based on Scripta's lexer, including literal multiline
   strings and quote-specific escapes.
 - Add comment toggling, bracket pairs, indentation, region folding, and snippets.

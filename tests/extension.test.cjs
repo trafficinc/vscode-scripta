@@ -11,7 +11,7 @@ function harness(checker = async () => ({ exitCode: 0, output: '' })) {
   const register = name => fn => { events[name] = fn; return { dispose() {} }; };
   const uri = { scheme: 'file', fsPath: path.resolve('examples/a file.scripta'), toString() { return 'file://' + this.fsPath; } };
   const document = { uri, languageId: 'scripta', version: 1, isDirty: false, isClosed: false, isUntitled: false,
-    getText: () => '<?scripta\n$a == 1;', async save() { calls.saves++; this.isDirty = false; return true; } };
+    getText: () => '// Source\n$a == 1;', async save() { calls.saves++; this.isDirty = false; return true; } };
   const commands = new Map();
   const items = new Map();
   const diagnostics = { set(uri, value) { items.set(uri.toString(), value); }, delete(uri) { items.delete(uri.toString()); }, clear() { items.clear(); }, dispose() {} };

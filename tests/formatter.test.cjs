@@ -11,10 +11,10 @@ function apply(source, edits) {
 }
 
 test('whitespace edits preserve Unicode, literal contents, CRLF and selection boundaries', () => {
-  const source = '<?scripta\r\n$x= "😀 first\r\n second";\r\nif(true){echo $x;}';
-  const formatted = '<?scripta\n$x = "😀 first\r\n second";\nif (true) {\n    echo $x;\n}\n';
+  const source = '// Source\r\n$x= "😀 first\r\n second";\r\nif(true){echo $x;}';
+  const formatted = '// Source\n$x = "😀 first\r\n second";\nif (true) {\n    echo $x;\n}\n';
   const edits = whitespaceEdits(source, formatted, 0, source.length, '\r\n');
-  assert.equal(apply(source, edits), '<?scripta\r\n$x = "😀 first\r\n second";\r\nif (true) {\r\n    echo $x;\r\n}\r\n');
+  assert.equal(apply(source, edits), '// Source\r\n$x = "😀 first\r\n second";\r\nif (true) {\r\n    echo $x;\r\n}\r\n');
   const start = source.indexOf('if');
   const end = source.indexOf('echo');
   const selected = whitespaceEdits(source, formatted, start, end, '\r\n');
@@ -40,7 +40,7 @@ function harness(formatter) {
       state.selector = selector; state.provider = provider; return { dispose() {} };
     } },
   };
-  const source = '<?scripta\nif(true){echo "literal  spaces";}';
+  const source = '// Source\nif(true){echo "literal  spaces";}';
   const document = { version: 1, uri: {}, eol: 1, getText: () => source, offsetAt: offset => offset, positionAt: offset => offset };
   registerFormatting(vscode, context, formatter);
   return { state, document, source, request: (range = { start: 0, end: source.length }) =>
@@ -50,7 +50,7 @@ function harness(formatter) {
 
 test('registered formatter uses current buffer, supports selections and skips untrusted requests', async () => {
   let calls = 0;
-  const formatted = '<?scripta\nif (true) {\n    echo "literal  spaces";\n}\n';
+  const formatted = '// Source\nif (true) {\n    echo "literal  spaces";\n}\n';
   const h = harness(async (executable, source) => {
     calls++;
     assert.equal(executable, '/tools/scripta with spaces');
@@ -75,7 +75,7 @@ test('formatter discards stale, closed, cancelled, disposed and no longer truste
     const h = harness(() => new Promise(resolve => { finish = resolve; }));
     const request = h.request();
     invalidate(h);
-    finish('<?scripta\nif (true) {\n    echo "literal  spaces";\n}\n');
+    finish('// Source\nif (true) {\n    echo "literal  spaces";\n}\n');
     assert.deepEqual(await request, []);
   }
   const h = harness(async () => { throw Object.assign(new Error('missing'), { code: 'ENOENT' }); });
@@ -103,7 +103,7 @@ test('runtime adapter formats only a temporary snapshot and cleans up success, f
   }
   try {
     await runtime('fs.writeFileSync(args[2], fs.readFileSync(args[2], "utf8").replace("$x=1", "$x = 1"));');
-    assert.equal(await formatSource(executable, '<?scripta\n$x=1;'), '<?scripta\n$x = 1;');
+    assert.equal(await formatSource(executable, '// Source\n$x=1;'), '// Source\n$x = 1;');
     await cleaned();
     await runtime('process.stderr.write("invalid syntax"); process.exit(1);');
     await assert.rejects(formatSource(executable, 'invalid'), /invalid syntax/);
@@ -124,7 +124,7 @@ const executable = process.env.SCRIPTA_BIN || process.env.SCR_BIN;
 test('real runtime formatting is idempotent, preserves literals and rejects invalid syntax', {
   skip: !executable && 'Set SCRIPTA_BIN for formatter integration',
 }, async () => {
-  const source = '<?scripta\n// keep  comment\nfunction greet($x:string):string{return "😀  first\n  second".$x;}\nfor($i=0;$i<2;$i+=1){echo greet(str($i));}\n';
+  const source = '// Source\n// keep  comment\nfunction greet($x:string):string{return "😀  first\n  second".$x;}\nfor($i=0;$i<2;$i+=1){echo greet(str($i));}\n';
   const formatted = await formatSource(executable, source);
   assert.ok(formatted.includes('"😀  first\n  second"'));
   assert.ok(formatted.includes('// keep  comment'));
@@ -132,5 +132,5 @@ test('real runtime formatting is idempotent, preserves literals and rejects inva
   assert.ok(formatted.includes('for ($i = 0; $i < 2; $i += 1) {'));
   assert.equal(apply(source, whitespaceEdits(source, formatted)), formatted);
   assert.equal(await formatSource(executable, formatted), formatted);
-  await assert.rejects(formatSource(executable, '<?scripta\nif ( {'), /error/);
+  await assert.rejects(formatSource(executable, '// Source\nif ( {'), /error/);
 });

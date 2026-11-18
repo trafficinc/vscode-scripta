@@ -48,7 +48,7 @@
           ".scripta",
           ".scta"
         ],
-        "firstLine": "^\\uFEFF?(?:#!\\s*(?:/\\S*/)?(?:scripta|scr)(?:\\s|$)|#!\\s*/\\S*/env\\s+(?:-S\\s+)?(?:scripta|scr)(?:\\s|$)|\\s*<\\?(?:scripta|scr)(?![A-Za-z0-9_]))",
+        "firstLine": "^\\uFEFF?(?:#!\\s*(?:/\\S*/)?(?:scripta|scr)(?:\\s|$)|#!\\s*/\\S*/env\\s+(?:-S\\s+)?(?:scripta|scr)(?:\\s|$))",
         "configuration": "./language-configuration.json"
       }
     ],

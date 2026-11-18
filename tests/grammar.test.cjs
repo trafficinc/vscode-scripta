@@ -23,36 +23,27 @@ function tokens(line, state) {
 function has(result, text, scope) {
   assert.ok(result.tokens.some(t => t.text === text && t.scopes.includes(scope)), JSON.stringify(result.tokens));
 }
-test('recognition covers extensions, tags, direct and env shebangs', () => {
+test('recognition covers extensions, direct and env shebangs', () => {
   const lang = read('package.json').contributes.languages[0];
   assert.deepEqual(lang.extensions, ['.scripta', '.scta']);
   const firstLine = new RegExp(lang.firstLine);
-  for (const tag of ['<?scripta', '<?scr']) {
-    for (const prefix of ['', '\uFEFF', '  ']) assert.ok(firstLine.test(prefix + tag), prefix + tag);
-  }
   for (const command of ['scripta', 'scr']) {
     for (const prefix of ['#!/usr/bin/env ', '#!/usr/bin/env -S ', '#!/usr/local/bin/', '#! /opt/bin/']) {
       assert.ok(firstLine.test(prefix + command), prefix + command);
       assert.ok(firstLine.test(prefix + command + ' run'), prefix + command + ' run');
     }
   }
-  for (const line of ['<?script', '<?scriptaExtra', '<?scripta_foo', '<?scripta1', '<?Scripta', '#!/usr/bin/env script', '#!/usr/bin/env scriptaExtra', '#!/bin/bash', '#!/opt/scraper']) assert.ok(!firstLine.test(line), line);
+  for (const line of ['echo "hello";', '#!/usr/bin/env script', '#!/usr/bin/env scriptaExtra', '#!/bin/bash', '#!/opt/scraper']) assert.ok(!firstLine.test(line), line);
 });
-test('tags, declarations, variable keyword boundaries, and strict equality', () => {
-  has(tokens('<?scripta'), '<?scripta', 'punctuation.section.embedded.begin.scripta');
-  has(tokens('<?scr'), '<?scr', 'punctuation.section.embedded.begin.scripta');
-  has(tokens('?>'), '?>', 'punctuation.section.embedded.end.scripta');
-  for (const line of ['<?script', '<?scriptaExtra', '<?scripta_foo', '<?scripta1', '<?Scripta']) {
-    assert.ok(!tokens(line).tokens.some(t => t.scopes.includes('punctuation.section.embedded.begin.scripta')), line);
-  }
+test('declarations, variable keyword boundaries, and strict equality', () => {
   has(tokens('function greet($if: string): string {'), 'greet', 'entity.name.function.scripta');
   has(tokens('$if === true;'), '$if', 'variable.other.scripta');
   has(tokens('$if === true;'), '===', 'keyword.operator.scripta');
   has(tokens('if ($if) {'), 'if', 'keyword.control.scripta');
   assert.ok(!tokens('if_name;').tokens.some(t => t.scopes.includes('keyword.control.scripta')));
 });
-test('strings preserve literal variables and comment/tag text', () => {
-  const result = tokens('"$name // # <?scripta ?> 世界"');
+test('strings preserve literal variables and comment text', () => {
+  const result = tokens('"$name // # /* comment markers */ 世界"');
   assert.ok(result.tokens.every(t => t.scopes.includes('string.quoted.double.scripta')));
   assert.ok(!result.tokens.some(t => t.scopes.some(s => /variable|comment|embedded/.test(s))));
 });
@@ -66,10 +57,10 @@ test('multiline strings and block comments carry state and recover', () => {
   let result = tokens('"first');
   result = tokens('second"; echo "ok";', result.state);
   has(result, 'echo', 'support.function.output.scripta');
-  result = tokens('/* " <?scripta');
+  result = tokens('/* " // text');
   result = tokens('still comment */ echo "ok";', result.state);
   has(result, 'echo', 'support.function.output.scripta');
-  for (const line of ['// " <?scripta', '# " <?scripta', '#!/usr/bin/env scr']) assert.ok(tokens(line).tokens.every(t => t.scopes.some(s => s.startsWith('comment.'))));
+  for (const line of ['// " /* text', '# " /* text', '#!/usr/bin/env scr']) assert.ok(tokens(line).tokens.every(t => t.scopes.some(s => s.startsWith('comment.'))));
 });
 test('qualified calls, methods, properties, numbers, and built-ins', () => {
   has(tokens('Json::decode("{}");'), 'Json', 'entity.name.namespace.scripta');
@@ -98,8 +89,8 @@ test('snippet expansions preserve Scripta variables and newline escapes', () => 
   const snippets = read('snippets/scripta.json');
   assert.deepEqual(snippets.Script.prefix, ['scripta', 'scr']);
   assert.deepEqual(snippets['Executable script'].prefix, ['scriptamain', 'scrmain']);
-  assert.equal(expand(snippets.Script.body), '<?scripta\n');
-  assert.equal(expand(snippets['Executable script'].body), '#!/usr/bin/env scripta\n<?scripta\n');
+  assert.equal(expand(snippets.Script.body), '// Script description\n\n');
+  assert.equal(expand(snippets['Executable script'].body), '#!/usr/bin/env scripta\n');
   assert.match(expand(snippets['Require once'].body), /helpers\.scripta/);
   assert.match(expand(snippets.For.body), /for \(\$i = 0; \$i < 10; \$i \+= 1\)/);
   assert.match(expand(snippets.Foreach.body), /foreach \(\$items as \$item\)/);
@@ -112,7 +103,7 @@ test('example and expanded snippets pass scripta check', { skip: !(process.env.S
     const sources = [fs.readFileSync(path.join(root, 'examples/highlighting.scripta'), 'utf8')];
     for (const snippet of Object.values(read('snippets/scripta.json'))) {
       const body = expand(snippet.body);
-      sources.push(body.includes('<?scripta') ? body : '<?scripta\n' + body);
+      sources.push(body);
     }
     sources.forEach((source, index) => {
       const file = path.join(dir, `${index}.scripta`);

@@ -10,9 +10,6 @@
       "include": "#strings"
     },
     {
-      "include": "#tags"
-    },
-    {
       "include": "#variables"
     },
     {
@@ -92,18 +89,6 @@
               "match": "\\\\."
             }
           ]
-        }
-      ]
-    },
-    "tags": {
-      "patterns": [
-        {
-          "name": "punctuation.section.embedded.begin.scripta",
-          "match": "<\\?(?:scripta|scr)(?![A-Za-z0-9_])"
-        },
-        {
-          "name": "punctuation.section.embedded.end.scripta",
-          "match": "\\?>"
         }
       ]
     },

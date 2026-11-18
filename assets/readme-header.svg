@@ -52,7 +52,7 @@
         <text x="38" y="212">5</text><text x="38" y="243">6</text>
       </g>
       <g fill="#d6e4f4">
-        <text x="62" y="88" fill="#78e9ca">&lt;?scripta</text>
+        <text x="62" y="88" fill="#78e9ca">// A simple greeting</text>
         <text x="62" y="119"><tspan fill="#b6a4ef">function</tspan> <tspan fill="#88cef0">greet</tspan>($name: <tspan fill="#e7bf7e">string</tspan>) {</text>
         <text x="62" y="150" xml:space="preserve">  <tspan fill="#b6a4ef">return</tspan> <tspan fill="#a6d99a">"Hello, "</tspan> . $name;</text>
         <text x="62" y="181">}</text>

@@ -16,7 +16,7 @@ exports.run = async function () {
   try {
     await configuration.update('executablePath', executable, vscode.ConfigurationTarget.Global);
     await configuration.update('checkOnSave', false, vscode.ConfigurationTarget.Global);
-    await fs.writeFile(filename, '<?scripta\n$x = "😀"; @');
+    await fs.writeFile(filename, '// Source\n$x = "😀"; @');
     const document = await vscode.workspace.openTextDocument(uri);
     assert.equal(document.languageId, 'scripta');
     await vscode.window.showTextDocument(document);
@@ -24,7 +24,7 @@ exports.run = async function () {
     assert.ok(extension);
     await extension.activate();
     const completionDocument = await vscode.workspace.openTextDocument({ language: 'scripta',
-      content: '<?scripta\nString::tr\nlen($items);' });
+      content: '// Source\nString::tr\nlen($items);' });
     const completions = await vscode.commands.executeCommand('vscode.executeCompletionItemProvider',
       completionDocument.uri, new vscode.Position(1, 10), ':');
     const trim = completions.items.find(item => (typeof item.label === 'string' ? item.label : item.label.label) === 'trim');
@@ -40,7 +40,7 @@ exports.run = async function () {
     assert.equal(errors[0].code, 'E0101');
     assert.equal(document.getText(errors[0].range), '@');
     const edit = new vscode.WorkspaceEdit();
-    edit.replace(uri, new vscode.Range(0, 0, document.lineCount, 0), '<?scripta\necho "editor smoke test\\n";');
+    edit.replace(uri, new vscode.Range(0, 0, document.lineCount, 0), '// Source\necho "editor smoke test\\n";');
     await vscode.workspace.applyEdit(edit);
     // Run must save this dirty buffer, then execute successfully.
     const ended = new Promise((resolve, reject) => {

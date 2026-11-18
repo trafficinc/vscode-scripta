@@ -6,7 +6,8 @@
     ],
     "description": "New Scripta script",
     "body": [
-      "<?scripta",
+      "// ${1:Script description}",
+      "",
       "$0"
     ]
   },
@@ -18,7 +19,6 @@
     "description": "Scripta script with a Unix shebang",
     "body": [
       "#!/usr/bin/env scripta",
-      "<?scripta",
       "$0"
     ]
   },

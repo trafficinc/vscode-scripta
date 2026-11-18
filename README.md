@@ -4,10 +4,10 @@
 
 VS Code language support for [Scripta](https://github.com/trafficinc/scripta).
 Open a `.scripta` file to select **Scripta** automatically. Extensionless scripts are
-recognized by a `scripta` shebang or a first-line `<?scripta` tag. You can also select
-Scripta from VS Code's language mode picker. The shorthand `.scta` extension,
-legacy `<?scr` tag, and `scr` shebang remain supported. The `.scr` extension
-is no longer associated with Scripta.
+recognized by a `scripta` shebang. You can also select Scripta from VS Code's
+language mode picker. The shorthand `.scta` extension and legacy `scr` shebang
+remain supported. The `.scr` extension is no longer associated with Scripta.
+Scripts contain plain source code; opening and closing tags are deprecated.
 
 Includes syntax highlighting, line/block comment toggling, bracket matching,
 auto-closing quotes and brackets, indentation, and region folding. Strings stay

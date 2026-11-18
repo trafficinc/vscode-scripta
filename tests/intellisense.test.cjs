@@ -59,12 +59,12 @@ function harness(marked) {
 }
 
 test('completion inserts calls, required placeholders and keywords without a runtime or trusted workspace', () => {
-  const h = harness('<?scripta\nle|');
+  const h = harness('// Source\nle|');
   assert.deepEqual(h.state.selector, { language: 'scripta' });
   assert.deepEqual(h.state.triggers, [':']);
   const items = h.completions();
   const len = items.find(item => item.label === 'len');
-  assert.equal(h.insert(len), '<?scripta\nlen(${1:\\$value})$0');
+  assert.equal(h.insert(len), '// Source\nlen(${1:\\$value})$0');
   assert.match(len.documentation.value, /Unicode scalar/);
   assert.ok(items.some(item => item.label === 'foreach' && item.insertText === 'foreach'));
   assert.ok(items.some(item => item.label === 'class'));
@@ -75,12 +75,12 @@ test('completion inserts calls, required placeholders and keywords without a run
 });
 
 test('module completion replaces the method only and omits optional arguments', () => {
-  const h = harness('<?scripta\nString :: sub|string');
+  const h = harness('// Source\nString :: sub|string');
   const items = h.completions();
   assert.ok(items.length > 0);
   assert.ok(items.every(item => item.detail.startsWith('String::')));
   const substring = items.find(item => item.label === 'substring');
-  assert.equal(h.insert(substring), '<?scripta\nString :: substring(${1:\\$text}, ${2:\\$start})$0');
+  assert.equal(h.insert(substring), '// Source\nString :: substring(${1:\\$text}, ${2:\\$start})$0');
   const empty = harness('Map::|');
   assert.equal(empty.insert(empty.completions().find(item => item.label === 'create')), 'Map::create()$0');
   assert.deepEqual(harness('Unknown::|').completions(), []);
@@ -114,7 +114,7 @@ test('built-ins are not suggested as variables, instance members or declaration 
 
 test('hover explains global and qualified built-ins, with context limitations', () => {
   assert.match(harness('le|n($items)').hover().contents.value, /len\(value\): int/);
-  assert.match(harness('<?scripta\nString :: tr|im($text)').hover().contents.value, /Removes Unicode whitespace/);
+  assert.match(harness('// Source\nString :: tr|im($text)').hover().contents.value, /Removes Unicode whitespace/);
   assert.match(harness('Session::st|art()').hover().contents.value, /only in a web request/);
   assert.match(harness('Sqlite::op|en($path)').hover().contents.value, /SQLite enabled/);
   for (const source of ['$le|n', '$object->le|n()', 'Unknown::le|n()', '// le|n()', '/* le|n() */', '"le|n()"',
