@@ -1,7 +1,10 @@
 """Exercise the artifact boundary before allowing a release to be created."""
 import importlib.util
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from zipfile import ZipFile
@@ -51,6 +54,18 @@ class ReleaseTest(unittest.TestCase):
             with self.subTest(version=version), self.assertRaises(ValueError):
                 release.prepare(self.root, version)
             self.assertEqual(release.read_json(self.root / 'package.json')['version'], '0.4.0')
+
+    def test_workflow_outputs_preserve_the_original_build_attempt(self):
+        self.build()
+        output = self.root / 'outputs'
+        env = dict(os.environ, GITHUB_REPOSITORY=self.provenance['repository'],
+                   BUILD_COMMIT=self.provenance['commit'], BUILD_RUN_ID='123',
+                   BUILD_RUN_ATTEMPT='2', GITHUB_OUTPUT=str(output))
+        result = subprocess.run([sys.executable, str(Path(release.__file__)), 'verify',
+                                 '--directory', str(self.directory)], env=env, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(output.read_text().splitlines(),
+                         ['version=0.5.0', 'filename=scripta-language-support-0.5.0.vsix', 'run_attempt=2'])
 
     def test_changed_artifact_and_checksums_are_rejected(self):
         filename = self.build()

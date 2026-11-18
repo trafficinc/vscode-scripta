@@ -182,27 +182,28 @@ if yours is elsewhere (on Windows, use the application `.exe`, not `code.cmd`).
 
 ## Build and release from GitHub
 
-After these workflows are on the repository's default branch, everything can be
+After this workflow is on the repository's default branch, everything can be
 done in GitHub; no local downloads, uploads, or version edits are needed.
 
 1. Open **Actions → Build VSIX → Run workflow**. Select the branch to build and
    enter a version such as `0.5.0` (three numbers, without `v`). The build applies
    it to the package and install instructions without committing changes, installs
    the locked dependencies, runs the automated tests, and packages the VSIX.
-2. Open the successful run's summary and copy its **build run ID**. Builds are
-   retained for 90 days, subject to the repository's artifact retention limit.
-3. Open **Actions → Create release from build → Run workflow**. Use the default
-   branch for this workflow, paste the build run ID, choose `release`, `prerelease`,
-   or `draft`, and optionally enter release notes. The version comes from the
-   saved build, so there is no second version to enter.
-4. The workflow verifies the build and creates `v0.5.0` at the build's source
-   commit, attaching the original VSIX, checksums, and build metadata. Release
-   notes include installation steps and a link to the build. It does not rebuild
-   the extension or publish it to the VS Code Marketplace.
+2. Check **Create release** to publish after a successful build. You can choose
+   `release`, `prerelease`, or `draft` and optionally enter release notes. Leave
+   the checkbox unchecked for a build only; release options are then ignored.
+   Click **Run workflow** to start.
+3. When checked, the same workflow verifies the saved build and creates `v0.5.0`
+   at the build's source commit, attaching the original VSIX, checksums, and build
+   metadata. Release notes include installation steps and a link to the build.
+   It does not rebuild the extension or publish it to the VS Code Marketplace.
+
+Build artifacts are retained for 90 days, subject to the repository's artifact
+retention limit. There is no separate release workflow or build run ID to enter.
 
 Failed builds, expired artifacts, changed checksums, mismatched versions/source
 metadata, and existing version tags/releases are rejected. A failed upload leaves
-a draft for inspection; delete that draft before retrying the release workflow.
+a draft for inspection; delete that draft before rerunning the failed release job.
 If its tag also exists, remove the unused tag or build a new version.
 
 GitHub's built-in workflow token handles releases; no publisher token or personal

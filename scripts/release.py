@@ -96,7 +96,7 @@ def main():
     record = manifest(args.root, args.directory, provenance) if args.command == 'manifest' else verify(args.directory, provenance)
     if output := os.environ.get('GITHUB_OUTPUT'):
         with open(output, 'a') as stream:
-            for key in ['version', 'filename']:
+            for key in ['version', 'filename', 'run_attempt']:
                 stream.write(f'{key}={record[key]}\n')
     print(f"Verified {record['filename']} ({record['sha256']})")
 

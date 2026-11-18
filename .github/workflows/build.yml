@@ -8,6 +8,24 @@ on:
         description: 'Extension version, e.g. 0.5.0 (no v prefix)'
         required: true
         type: string
+      create_release:
+        description: 'Create release'
+        required: true
+        default: false
+        type: boolean
+      release_type:
+        description: 'Release type (only used when Create release is checked)'
+        required: true
+        default: release
+        type: choice
+        options:
+          - release
+          - prerelease
+          - draft
+      notes:
+        description: 'Optional release notes (only used when Create release is checked)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -16,6 +34,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+      attempt: ${{ steps.package.outputs.run_attempt }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -57,7 +78,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Show how to release this build
+      - name: Show the saved build
         env:
           VERSION: ${{ steps.package.outputs.version }}
           ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
@@ -67,5 +88,79 @@ jobs:
             echo "Build run ID: **$GITHUB_RUN_ID**"
             echo "Source commit: \`$GITHUB_SHA\`"
             echo "[Saved build]($ARTIFACT_URL)"
-            echo "Run **Create release from build** with build run ID **$GITHUB_RUN_ID**. No download or upload is needed."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    name: Create GitHub release
+    needs: build
+    if: ${{ inputs.create_release && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: create-vsix-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Download this run's saved VSIX build
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: release-artifact
+          merge-multiple: true
+
+      - name: Verify the VSIX version, checksum, and source
+        id: package
+        env:
+          BUILD_COMMIT: ${{ github.sha }}
+          BUILD_RUN_ID: ${{ github.run_id }}
+          BUILD_RUN_ATTEMPT: ${{ needs.build.outputs.attempt }}
+        run: python3 scripts/release.py verify --directory release-artifact
+
+      - name: Publish the saved build as a GitHub release
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          VERSION: ${{ steps.package.outputs.version }}
+          VSIX_FILENAME: ${{ steps.package.outputs.filename }}
+          BUILD_COMMIT: ${{ github.sha }}
+          BUILD_RUN_ID: ${{ github.run_id }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          RELEASE_NOTES: ${{ inputs.notes }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const tag = `v${process.env.VERSION}`;
+            try {
+              await github.rest.git.getRef({ ...context.repo, ref: `tags/${tag}` });
+              throw new Error(`Tag ${tag} already exists. Build a new version.`);
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            try {
+              await github.rest.repos.getReleaseByTag({ ...context.repo, tag });
+              throw new Error(`Release ${tag} already exists. Build a new version.`);
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            const buildUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.BUILD_RUN_ID}`;
+            const body = [process.env.RELEASE_NOTES,
+              `Download **${process.env.VSIX_FILENAME}**, then in VS Code choose **Extensions → ⋯ → Install from VSIX…** and select the file.`,
+              `Built from commit ${process.env.BUILD_COMMIT}. [Original build](${buildUrl}).`,
+              'The VSIX is the original build artifact; it was not rebuilt for this release.'].filter(Boolean).join('\n\n');
+            // Upload everything to a draft first, so public releases always have their assets.
+            const { data: release } = await github.rest.repos.createRelease({ ...context.repo,
+              tag_name: tag, target_commitish: process.env.BUILD_COMMIT, name: `Scripta ${tag}`,
+              body, draft: true, prerelease: process.env.RELEASE_TYPE === 'prerelease' });
+            for (const name of [process.env.VSIX_FILENAME, 'SHA256SUMS', 'build.json']) {
+              const data = fs.readFileSync(`release-artifact/${name}`);
+              await github.rest.repos.uploadReleaseAsset({ ...context.repo, release_id: release.id,
+                name, data, headers: { 'content-type': 'application/octet-stream', 'content-length': data.length } });
+            }
+            if (process.env.RELEASE_TYPE !== 'draft') {
+              await github.rest.repos.updateRelease({ ...context.repo, release_id: release.id, draft: false });
+            }
+            await core.summary.addHeading(`Scripta ${tag}`).addLink('Open release', release.html_url).write();
