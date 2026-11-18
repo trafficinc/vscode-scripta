@@ -1,4 +1,4 @@
-![Scripta — VS Code Language Support. Syntax highlighting, snippets, run and check.](assets/readme-header.svg)
+![Scripta — VS Code Language Support. Syntax highlighting, snippets, run and check.](assets/readme-header.png)
 
 # Scripta VS Code Language Support
 
@@ -72,9 +72,11 @@ to its full path in VS Code Settings. For example:
 Open a Scripta file and use the play button, editor context menu, or Command
 Palette command **Scripta: Run Scripta File**. The script runs in an integrated
 terminal, which supports interactive input. Stop it with the task's terminate
-button. Each `runArguments` item is passed literally as one script argument.
-The working directory is the file's workspace folder, or its containing directory
-when opened outside a workspace. Paths are passed directly to the process.
+button. Run requires an open folder in VS Code; in an empty window it explains
+that requirement before saving or starting a task. Each `runArguments` item is
+passed literally as one script argument. The working directory is the file's
+workspace folder, or its containing directory for a file outside the open folders.
+Paths are passed directly to the process.
 
 **Scripta: Check Scripta File** runs `scripta check` without executing the script and
 shows errors as editor underlines and entries in Problems, with diagnostic codes
@@ -155,9 +157,16 @@ For packaging without npm dependencies, Python 3 can create the local-install
 VSIX with `python3 scripts/package.py`. Marketplace publishing is a separate step;
 verify the publisher identity and repository URL before publishing.
 
-An editor smoke test is available in `tests/vscode`. With an isolated VS Code
-profile, set `SCRIPTA_BIN` and launch VS Code with `--extensionDevelopmentPath` set
-to this repository and `--extensionTestsPath` set to `tests/vscode` (both absolute
-paths). The test checks language recognition, completion and hover, actual
-diagnostics, saving, and running a terminal task. Use a separate `--user-data-dir` and `--extensions-dir`
-for this test; it temporarily changes that profile's Scripta settings.
+Run the editor smoke test with:
+
+```sh
+SCRIPTA_BIN=/path/to/scripta npm run test:editor
+```
+
+The launcher creates a temporary workspace, user profile, and extensions directory
+and removes them after VS Code exits. It checks language recognition, completion
+and hover, actual diagnostics, saving, and running a terminal task. An open
+workspace is required because VS Code rejects terminal tasks with another working
+directory in an empty window. On macOS the launcher uses the standard application
+path; elsewhere it uses `code` on PATH. Set `VSCODE_BIN` to the VS Code executable
+if yours is elsewhere (on Windows, use the application `.exe`, not `code.cmd`).

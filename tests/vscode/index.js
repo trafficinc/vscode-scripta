@@ -1,14 +1,15 @@
-// Run with VS Code --extensionDevelopmentPath=<repo> --extensionTestsPath=<this directory>.
+// Launch with SCRIPTA_BIN=/path/to/scripta npm run test:editor.
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
-const os = require('node:os');
 const path = require('node:path');
 const vscode = require('vscode');
 
 exports.run = async function () {
   const executable = (process.env.SCRIPTA_BIN || process.env.SCR_BIN);
   assert.ok(executable, 'Set SCRIPTA_BIN to the Scripta executable');
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'scripta-editor-'));
+  const workspace = vscode.workspace.workspaceFolders?.[0];
+  assert.ok(workspace, 'Run npm run test:editor to launch with an isolated workspace');
+  const dir = await fs.mkdtemp(path.join(workspace.uri.fsPath, '.scripta-editor-'));
   const filename = path.join(dir, 'script with $ and ;.scripta');
   const uri = vscode.Uri.file(filename);
   const configuration = vscode.workspace.getConfiguration('scripta');
@@ -51,7 +52,7 @@ exports.run = async function () {
       });
     });
     await vscode.commands.executeCommand('scripta.runFile');
-    assert.equal(await ended, 0);
+    assert.equal(await ended, 0, 'Scripta task must launch and exit successfully');
     assert.equal(document.isDirty, false);
     await vscode.commands.executeCommand('scripta.checkFile');
     assert.equal(vscode.languages.getDiagnostics(uri).filter(d => d.source === 'scripta').length, 0);

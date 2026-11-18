@@ -36,9 +36,13 @@ function activateWithApi(vscode, context, checker = checkFile) {
     if (typeof value !== 'string' || !value.trim()) throw new Error('Set scripta.executablePath to the Scripta executable or its full path.');
     return value;
   }
-  async function activeDocument() {
+  async function activeDocument(requireWorkspace = false) {
     if (!vscode.workspace.isTrusted) {
       void vscode.window.showWarningMessage('Trust this workspace to run Scripta commands.');
+      return;
+    }
+    if (requireWorkspace && !vscode.workspace.workspaceFolders?.length) {
+      void vscode.window.showWarningMessage('Open a folder in VS Code before running Scripta files. The integrated terminal requires an open workspace.');
       return;
     }
     const document = vscode.window.activeTextEditor?.document;
@@ -102,7 +106,7 @@ function activateWithApi(vscode, context, checker = checkFile) {
 
   async function run() {
     try {
-      const document = await activeDocument();
+      const document = await activeDocument(true);
       if (!document || disposed || !vscode.workspace.isTrusted) return;
       const args = settings(document).get('runArguments', []);
       if (!Array.isArray(args) || args.some(arg => typeof arg !== 'string')) throw new Error('scripta.runArguments must be an array of strings.');

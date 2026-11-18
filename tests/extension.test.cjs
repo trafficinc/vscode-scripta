@@ -20,7 +20,8 @@ function harness(checker = async () => ({ exitCode: 0, output: '' })) {
       registerCompletionItemProvider: () => ({ dispose() {} }), registerHoverProvider: () => ({ dispose() {} }) },
     window: { activeTextEditor: { document }, createOutputChannel: () => ({ appendLine: s => calls.logs.push(s), show() {}, dispose() {} }),
       showErrorMessage: s => calls.errors.push(s), showWarningMessage: s => calls.warnings.push(s), setStatusBarMessage() {} },
-    workspace: { isTrusted: true, getConfiguration: () => ({ get: (name, fallback) => values[name] ?? fallback }), getWorkspaceFolder: () => undefined,
+    workspace: { isTrusted: true, workspaceFolders: [{ uri: { fsPath: path.resolve('.') } }],
+      getConfiguration: () => ({ get: (name, fallback) => values[name] ?? fallback }), getWorkspaceFolder: () => undefined,
       onDidSaveTextDocument: register('save'), onDidChangeTextDocument: register('change'), onDidCloseTextDocument: register('close'), onDidChangeConfiguration: register('configuration') },
     commands: { registerCommand: (name, fn) => { commands.set(name, fn); return { dispose() {} }; }, executeCommand: async name => calls.executed.push(name) },
     tasks: { executeTask: async task => calls.tasks.push(task) },
@@ -55,6 +56,18 @@ test('Run and Check default to the canonical scripta executable', async () => {
   assert.deepEqual(checked, ['scripta']);
   const manifest = require('../package.json');
   assert.equal(manifest.contributes.configuration.properties['scripta.executablePath'].default, 'scripta');
+});
+test('Run explains empty-window restrictions without saving; Check still works', async () => {
+  const h = harness();
+  h.vscode.workspace.workspaceFolders = undefined;
+  h.document.isDirty = true;
+  await h.commands.get('scripta.runFile')();
+  assert.equal(h.calls.tasks.length, 0);
+  assert.equal(h.calls.saves, 0);
+  assert.match(h.calls.warnings[0], /Open a folder/);
+  await h.commands.get('scripta.checkFile')();
+  assert.equal(h.calls.saves, 1);
+  assert.equal(h.items.size, 1);
 });
 test('cancelled save, remote documents and untrusted workspaces cannot run', async () => {
   const h = harness();

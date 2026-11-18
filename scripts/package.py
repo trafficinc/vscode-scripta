@@ -36,6 +36,7 @@ content_types = '''<?xml version="1.0" encoding="utf-8"?>
  <Default Extension="scta" ContentType="text/plain"/>
  <Default Extension="md" ContentType="text/markdown"/>
  <Default Extension="svg" ContentType="image/svg+xml"/>
+ <Default Extension="png" ContentType="image/png"/>
  <Default Extension="vsixmanifest" ContentType="text/xml"/>
  <Override PartName="/extension/LICENSE" ContentType="text/plain"/>
 </Types>'''

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Use a PNG README banner so standard VSIX packaging succeeds.
+- Explain the open-folder requirement for Run in empty windows; launch editor smoke tests in an isolated workspace.
 - Add built-in and keyword completion, with module suggestions after `::` and required argument placeholders.
 - Add hover signatures and documentation for 226 global and module functions.
 - Keep basic IntelliSense available without the runtime and in Restricted Mode; suppress it in strings and comments.
