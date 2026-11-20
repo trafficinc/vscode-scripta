@@ -26,6 +26,7 @@
   "scripts": {
     "test": "node --test",
     "test:editor": "node scripts/editor-smoke.cjs",
+    "scan:secrets": "node scripts/scan-secrets.cjs",
     "package": "node -e \"require('node:fs').mkdirSync('dist', { recursive: true })\" && vsce package --out dist/"
   },
   "contributes": {

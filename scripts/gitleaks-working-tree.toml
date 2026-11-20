@@ -1,0 +1,10 @@
+title = "Scripta working tree secret scan"
+
+[extend]
+useDefault = true
+
+# Keep installed dependencies and generated packages out of the working tree scan.
+# The history scan uses Gitleaks defaults so committed files are still checked.
+[allowlist]
+description = "Dependencies and generated packages"
+paths = ['''(^|/)(node_modules|dist)/''']

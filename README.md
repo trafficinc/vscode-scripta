@@ -145,6 +145,20 @@ npm run package
 Run build/release validation tests with
 `python3 -m unittest discover -s tests -p '*_test.py'`.
 
+To scan for secrets, install [Gitleaks](https://github.com/gitleaks/gitleaks)
+(v8.19 or newer; on macOS, `brew install gitleaks`), then run:
+
+```bash
+npm run scan:secrets
+```
+
+The script scans Git history across all local refs and the current files,
+including untracked and ignored files such as `.env`. The current-file scan
+excludes `node_modules/` and `dist/`. Findings are redacted, and the command exits
+nonzero if either scan finds secrets or fails. Set `GITLEAKS_BIN` to use a binary
+outside your PATH. You can also run `node /path/to/repo/scripts/scan-secrets.cjs`
+from another directory.
+
 Open this folder in VS Code and press **F5** to launch an Extension Development
 Host with `examples/highlighting.scripta`. Check colors in a light and dark theme,
 comment toggling, quote/bracket completion, indentation, and snippet insertion.
